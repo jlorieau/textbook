@@ -1,0 +1,149 @@
+---
+// src/components/VideoCard.astro
+interface Props {
+  videoId: string;
+  title: string;
+  slug: string;
+  duration?: string;
+  thumbnailUrl?: string;
+  companionUrl?: string;
+  companionTitle?: string;
+}
+
+const {
+  videoId,
+  title,
+  slug,
+  duration = "Video Lecture",
+  thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+  companionUrl,
+  companionTitle,
+} = Astro.props;
+
+const youtubeUrl = `https://youtu.be/${videoId}`;
+---
+
+<div class="video-card-container" data-slug={slug} id={`video-card-${slug}`}>
+  <a
+    href={youtubeUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="video-banner-link"
+    title={`Watch "${title}" on YouTube`}
+  >
+    <img
+      src={thumbnailUrl}
+      alt={title}
+      loading="lazy"
+      onerror={`this.onerror=null; this.src='https://img.youtube.com/vi/${videoId}/hqdefault.jpg';`}
+    />
+    <div class="video-play-overlay">
+      <span class="play-button-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        Watch on YouTube
+      </span>
+    </div>
+  </a>
+
+  <div class="video-card-meta">
+    <div class="video-card-details">
+      <h3>{title}</h3>
+      <div class="video-badges">
+        <span class="badge-pill">⏱ {duration}</span>
+        <span class="badge-pill">YouTube 4K / 1080p</span>
+        {companionUrl && (
+          <a
+            href={companionUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="badge-pill"
+            style="color: var(--sl-color-accent); text-decoration: none;"
+          >
+            ✏️ Practice Problems ↗
+          </a>
+        )}
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="tracker-toggle-btn"
+      data-tracker-slug={slug}
+      aria-pressed="false"
+    >
+      <span class="tracker-icon">○</span>
+      <span class="tracker-text">Mark as Watched</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  function setupVideoCards() {
+    const cards = document.querySelectorAll('.video-card-container');
+    cards.forEach((card) => {
+      const slug = card.getAttribute('data-slug');
+      if (!slug) return;
+
+      const storageKey = `qp_watched_${slug}`;
+      const btn = card.querySelector('.tracker-toggle-btn');
+      const textSpan = btn?.querySelector('.tracker-text');
+      const iconSpan = btn?.querySelector('.tracker-icon');
+      const link = card.querySelector('.video-banner-link');
+
+      function updateUI(isCompleted: boolean) {
+        if (isCompleted) {
+          card.classList.add('is-watched');
+          btn?.classList.add('completed');
+          btn?.setAttribute('aria-pressed', 'true');
+          if (textSpan) textSpan.textContent = 'Completed ✓';
+          if (iconSpan) iconSpan.textContent = '●';
+        } else {
+          card.classList.remove('is-watched');
+          btn?.classList.remove('completed');
+          btn?.setAttribute('aria-pressed', 'false');
+          if (textSpan) textSpan.textContent = 'Mark as Watched';
+          if (iconSpan) iconSpan.textContent = '○';
+        }
+      }
+
+      // Check initial state from LocalStorage
+      const isWatched = localStorage.getItem(storageKey) === 'true';
+      updateUI(isWatched);
+
+      // Toggle click
+      btn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const current = localStorage.getItem(storageKey) === 'true';
+        const next = !current;
+        localStorage.setItem(storageKey, next ? 'true' : 'false');
+        updateUI(next);
+
+        // Notify global progress bars
+        window.dispatchEvent(
+          new CustomEvent('qp:progress-update', {
+            detail: { slug, isCompleted: next },
+          })
+        );
+      });
+
+      // Optional: automatically flag as watched or visited when clicking the YouTube link
+      link?.addEventListener('click', () => {
+        if (localStorage.getItem(storageKey) !== 'true') {
+          localStorage.setItem(storageKey, 'true');
+          updateUI(true);
+          window.dispatchEvent(
+            new CustomEvent('qp:progress-update', {
+              detail: { slug, isCompleted: true },
+            })
+          );
+        }
+      });
+    });
+  }
+
+  // Run on initial load and View Transitions
+  setupVideoCards();
+  document.addEventListener('astro:page-load', setupVideoCards);
+</script>

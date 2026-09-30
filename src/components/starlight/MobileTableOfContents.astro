@@ -1,0 +1,126 @@
+---
+// src/components/starlight/MobileTableOfContents.astro
+import { Icon } from '@astrojs/starlight/components';
+import { thermodynamicsBook } from '../../data/books/thermodynamics';
+import { quantumMechanicsBook } from '../../data/books/quantum-mechanics';
+
+const { toc } = Astro.locals.starlightRoute;
+const slug = Astro.locals.starlightRoute?.entry?.slug ?? Astro.url.pathname.replace(/^\/|\/$/g, '');
+
+let book = null;
+if (slug === 'thermodynamics') {
+  book = thermodynamicsBook;
+} else if (slug === 'quantum-mechanics') {
+  book = quantumMechanicsBook;
+}
+
+const items = book
+  ? [
+      { slug: '_top', text: Astro.locals.t('tableOfContents.overview') || 'Overview' },
+      ...book.chapters.map((ch, idx) => ({
+        slug: `ch-${idx + 1}`,
+        text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
+      })),
+    ]
+  : (toc?.items ?? []);
+---
+
+{
+  (book || toc) && (
+    <mobile-starlight-toc data-min-h={toc?.minHeadingLevel ?? 2} data-max-h={toc?.maxHeadingLevel ?? 3}>
+      <nav aria-labelledby="starlight__on-this-page--mobile">
+        <details id="starlight__mobile-toc">
+          <summary id="starlight__on-this-page--mobile" class="sl-flex">
+            <span class="toggle sl-flex">
+              {Astro.locals.t('tableOfContents.onThisPage')}
+              <Icon name="right-caret" class="caret" size="1rem" />
+            </span>
+            <span class="display-current" />
+          </summary>
+          <div class="dropdown">
+            <ul class="mobile-toc-list">
+              {items.map((item) => (
+                <li>
+                  <a href={'#' + item.slug}>
+                    <span>{item.text}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </details>
+      </nav>
+    </mobile-starlight-toc>
+  )
+}
+
+<style>
+  @layer starlight.core {
+    nav {
+      position: fixed;
+      z-index: var(--sl-z-index-toc);
+      top: calc(var(--sl-nav-height) - 1px);
+      inset-inline: 0;
+      border-top: 1px solid var(--sl-color-gray-5);
+      background-color: var(--sl-color-bg-nav);
+    }
+    @media (min-width: 50rem) {
+      nav {
+        inset-inline-start: var(--sl-content-inline-start, 0);
+      }
+    }
+    summary {
+      gap: 0.5rem;
+      align-items: center;
+      height: var(--sl-mobile-toc-height);
+      border-bottom: 1px solid var(--sl-color-hairline-shade);
+      padding: 0.5rem 1rem;
+      font-size: var(--sl-text-xs);
+      outline-offset: var(--sl-outline-offset-inside);
+      cursor: pointer;
+    }
+    summary::marker,
+    summary::-webkit-details-marker {
+      display: none;
+    }
+    .toggle {
+      flex-shrink: 0;
+      gap: 0.25rem;
+      align-items: center;
+      font-weight: 600;
+    }
+    details[open] .caret {
+      transform: rotate(90deg);
+    }
+    .display-current {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      color: var(--sl-color-gray-3);
+    }
+    .dropdown {
+      --max-height: calc(100vh - var(--sl-nav-height) - var(--sl-mobile-toc-height));
+      max-height: var(--max-height);
+      overflow-y: auto;
+      border-bottom: 1px solid var(--sl-color-hairline-shade);
+      background-color: var(--sl-color-bg-nav);
+    }
+    ul.mobile-toc-list {
+      padding: 0;
+      list-style: none;
+      margin: 0;
+    }
+    ul.mobile-toc-list a {
+      display: block;
+      padding: 0.65rem 1rem;
+      border-top: 1px solid var(--sl-color-gray-6);
+      color: var(--sl-color-text);
+      font-size: var(--sl-text-sm);
+      text-decoration: none;
+    }
+    ul.mobile-toc-list a:hover {
+      color: var(--sl-color-white);
+      background-color: var(--sl-color-gray-6);
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+---
+// src/components/ProblemDrawer.astro
+interface Props {
+  problemNumber: string | number;
+  title: string;
+  hint?: string;
+  solutionVideoUrl?: string;
+  solutionTimestampLabel?: string;
+}
+
+const { problemNumber, title, hint, solutionVideoUrl, solutionTimestampLabel } = Astro.props;
+---
+
+<div class="problem-drawer-container" style="margin: 1.5rem 0; border: 1px solid var(--sl-color-gray-5); border-radius: 8px; padding: 1rem; background: var(--sl-color-gray-6);">
+  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem;">
+    <h4 style="margin: 0; font-size: 1.05rem;">
+      <span style="color: var(--sl-color-accent);">Problem {problemNumber}:</span> {title}
+    </h4>
+  </div>
+
+  <div class="problem-content" style="margin: 0.5rem 0 1rem 0;">
+    <slot />
+  </div>
+
+  {hint && (
+    <details style="margin: 0.5rem 0; cursor: pointer;">
+      <summary style="font-weight: 600; color: var(--sl-color-gray-2);">💡 View Hint</summary>
+      <div style="margin-top: 0.5rem; padding: 0.75rem; background: var(--sl-color-gray-5); border-radius: 6px;">
+        {hint}
+      </div>
+    </details>
+  )}
+
+  <details style="margin: 0.5rem 0; cursor: pointer;">
+    <summary style="font-weight: 600; color: var(--sl-color-accent);">📝 Worked Solution & Video Walkthrough</summary>
+    <div style="margin-top: 0.5rem; padding: 0.75rem; background: var(--sl-color-gray-5); border-radius: 6px;">
+      <slot name="solution" />
+      {solutionVideoUrl && (
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px dashed var(--sl-color-gray-4);">
+          <a
+            href={solutionVideoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style="display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 600; color: #ef4444; text-decoration: none;"
+          >
+            ▶ Watch Video Solution Walkthrough {solutionTimestampLabel ? `(${solutionTimestampLabel})` : ''} ↗
+          </a>
+        </div>
+      )}
+    </div>
+  </details>
+</div>

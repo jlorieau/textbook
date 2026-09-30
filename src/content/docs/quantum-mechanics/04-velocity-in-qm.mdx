@@ -1,0 +1,49 @@
+---
+title: "4. Velocity in Quantum Mechanics"
+description: "Why velocity is meaningless in quantum mechanics and how probability replaces classical trajectory."
+---
+
+import VideoCard from '../../../components/VideoCard.astro';
+import TimestampLink from '../../../components/TimestampLink.astro';
+import ProblemDrawer from '../../../components/ProblemDrawer.astro';
+
+<VideoCard
+  videoId="KCFKsyrFnnw"
+  title="Is Velocity Meaningless in Quantum Mechanics?"
+  slug="qm-04-velocity-in-qm"
+  duration="12:15"
+/>
+
+## 1. Classical Trajectory vs. Quantum Uncertainty
+
+In classical Newtonian mechanics, a particle has simultaneously well-defined position $x(t)$ and velocity $v(t) = \frac{dx}{dt}$. 
+
+In quantum mechanics, position $\hat{x}$ and momentum $\hat{p}$ are represented by non-commuting Hermitian operators:
+
+```math
+[\hat{x}, \hat{p}] = \hat{x}\hat{p} - \hat{p}\hat{x} = i\hbar
+```
+
+According to the Robertson-Schrödinger uncertainty relation:
+
+```math
+\sigma_x \sigma_p \ge \frac{\hbar}{2}
+```
+
+Because an exact position measurement ($\sigma_x \to 0$) forces infinite momentum dispersion ($\sigma_p \to \infty$), the concept of an instantaneous path velocity $\frac{\Delta x}{\Delta t}$ is fundamentally ill-defined.
+
+---
+
+## 2. Expectation Values & Ehrenfest's Theorem
+
+While point-by-point trajectory ceases to exist, the average or **expectation value** of momentum obeys a quantum correspondence principle:
+
+```math
+\langle p \rangle = \int_{-\infty}^{\infty} \psi^*(x) \left( -i\hbar \frac{\partial}{\partial x} \right) \psi(x) \, dx
+```
+
+By Ehrenfest's Theorem, the time derivative of the average position recovers classical velocity:
+
+```math
+\frac{d\langle x \rangle}{dt} = \frac{\langle p \rangle}{m}
+```

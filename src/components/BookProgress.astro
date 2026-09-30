@@ -1,0 +1,63 @@
+---
+// src/components/BookProgress.astro
+interface Props {
+  bookTitle: string;
+  bookId: string;
+  chapters: Array<{ slug: string; title: string }>;
+}
+
+const { bookTitle, bookId, chapters } = Astro.props;
+---
+
+<div class="book-progress-wrapper" data-book-id={bookId} data-chapters={JSON.stringify(chapters.map(c => c.slug))}>
+  <div class="progress-header">
+    <span class="book-label">📖 {bookTitle} Progress</span>
+    <span class="progress-stats">0 / {chapters.length} Completed (0%)</span>
+  </div>
+  <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+    <div class="progress-bar-fill"></div>
+  </div>
+</div>
+
+<script>
+  function setupProgressBars() {
+    const bars = document.querySelectorAll('.book-progress-wrapper');
+    bars.forEach((bar) => {
+      const chaptersRaw = bar.getAttribute('data-chapters');
+      if (!chaptersRaw) return;
+      const chapterSlugs: string[] = JSON.parse(chaptersRaw);
+      const statsElem = bar.querySelector('.progress-stats');
+      const fillElem = bar.querySelector('.progress-bar-fill') as HTMLElement;
+      const trackElem = bar.querySelector('.progress-track');
+
+      function calculateProgress() {
+        let completed = 0;
+        chapterSlugs.forEach((slug) => {
+          if (localStorage.getItem(`qp_watched_${slug}`) === 'true') {
+            completed++;
+          }
+        });
+        const total = chapterSlugs.length;
+        const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        if (statsElem) {
+          statsElem.textContent = `${completed} / ${total} Completed (${percent}%)`;
+        }
+        if (fillElem) {
+          fillElem.style.width = `${percent}%`;
+        }
+        if (trackElem) {
+          trackElem.setAttribute('aria-valuenow', percent.toString());
+        }
+      }
+
+      calculateProgress();
+
+      // Update in real-time when any video card is toggled
+      window.addEventListener('qp:progress-update', calculateProgress);
+    });
+  }
+
+  setupProgressBars();
+  document.addEventListener('astro:page-load', setupProgressBars);
+</script>

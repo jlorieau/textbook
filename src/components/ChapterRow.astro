@@ -1,0 +1,757 @@
+---
+// src/components/ChapterRow.astro
+import type { ChapterData } from '../types/book';
+
+interface Props {
+  chapter: ChapterData;
+  chapterNumber: number;
+  bookId: string;
+}
+
+const { chapter, chapterNumber, bookId } = Astro.props;
+const hasProblemSet = Boolean(chapter.problemSet);
+const lectureSlug = `${bookId}-ch${chapterNumber}-${chapter.id}`;
+const problemSetSlug = `${bookId}-ps${chapterNumber}-${chapter.id}`;
+
+const lectureThumb = chapter.youtubeId
+  ? `https://img.youtube.com/vi/${chapter.youtubeId}/maxresdefault.jpg`
+  : null;
+
+const psYouTubeUrl = chapter.problemSet?.youtubeId
+  ? `https://youtu.be/${chapter.problemSet.youtubeId}`
+  : null;
+---
+
+<section
+  class={`chapter-row-wrapper ${hasProblemSet ? 'has-ps' : 'solo-lecture'}`}
+  data-chapter-id={chapter.id}
+  data-chapter-number={chapterNumber}
+>
+  <!-- Chapter Header -->
+  <div class="chapter-row-header">
+    <div class="chapter-badge-title">
+      <span class="chapter-number-pill">Chapter {chapterNumber}</span>
+      <h2 id={`ch-${chapterNumber}`} class="chapter-title-text">{chapter.title}</h2>
+    </div>
+    {chapter.duration && (
+      <span class="chapter-time-pill">⏱ {chapter.duration}</span>
+    )}
+  </div>
+
+  <p class="chapter-summary-text">{chapter.summary}</p>
+
+  <!-- Full-Width Lecture Video Card -->
+  <div class="video-card lecture-card" data-slug={lectureSlug}>
+    <div class="card-top-bar">
+      <span class="video-type-badge lecture-badge">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        Main Concept Lecture
+      </span>
+      <button
+        type="button"
+        class="track-btn track-lecture-btn"
+        data-track-slug={lectureSlug}
+        aria-pressed="false"
+        title="Toggle lecture watch status"
+      >
+        <span class="track-icon">○</span>
+        <span class="track-label">Mark Watched</span>
+      </button>
+    </div>
+
+    <!-- Full-width 16:9 thumbnail preview -->
+    {chapter.youtubeId ? (
+      <a
+        href={`https://youtu.be/${chapter.youtubeId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="video-preview-link"
+        title={`Watch "${chapter.title}" on YouTube`}
+      >
+        <img
+          src={lectureThumb}
+          alt={chapter.title}
+          loading="lazy"
+          onerror={`this.onerror=null; this.src='https://img.youtube.com/vi/${chapter.youtubeId}/hqdefault.jpg';`}
+        />
+        <div class="play-overlay">
+          <div class="play-btn-circle">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <span class="play-overlay-text">Watch Full Lecture on YouTube ↗</span>
+        </div>
+      </a>
+    ) : (
+      <div class="video-preview-placeholder">
+        <div class="placeholder-icon">🎬</div>
+        <div class="placeholder-text">Lecture Video in Final Production</div>
+        <div class="placeholder-sub">Script and Manim animations completed. Releasing soon on YouTube!</div>
+      </div>
+    )}
+
+    <!-- Timestamps below the video -->
+    {chapter.timestamps && chapter.timestamps.length > 0 && (
+      <div class="chapter-derivation-timestamps">
+        <div class="timestamp-section-title">⏱ Key Derivations & Timestamps</div>
+        <div class="timestamp-pill-wrap">
+          {chapter.timestamps.map((ts) => (
+            <a
+              href={`https://youtu.be/${chapter.youtubeId}?t=${ts.seconds}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="timestamp-pill"
+              title={`Jump to ${ts.label}`}
+            >
+              <span class="ts-time">{ts.time}</span>
+              <span class="ts-label">{ts.label}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- Companion Problem Set: Ultra-Compact 1-2 Line Card -->
+  {hasProblemSet && chapter.problemSet && (
+    <div class="companion-problemset-compact" data-slug={problemSetSlug}>
+      <!-- Line 1: Identity & Action Buttons -->
+      <div class="ps-compact-row">
+        <div class="ps-compact-identity">
+          <span class="ps-compact-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            Problem Set:
+          </span>
+          <span class="ps-compact-title">{chapter.problemSet.title}</span>
+          {chapter.problemSet.duration && (
+            <span class="ps-compact-time">({chapter.problemSet.duration})</span>
+          )}
+        </div>
+
+        <div class="ps-compact-actions">
+          {psYouTubeUrl && (
+            <a
+              href={psYouTubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="ps-compact-yt-btn"
+              title={`Watch "${chapter.problemSet.title}" on YouTube`}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              Watch Solutions ↗
+            </a>
+          )}
+          <button
+            type="button"
+            class="track-btn track-ps-btn track-compact-btn"
+            data-track-slug={problemSetSlug}
+            aria-pressed="false"
+            title="Toggle problem set solved status"
+          >
+            <span class="track-icon">○</span>
+            <span class="track-label">Mark Solved</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Line 2: Expandable Timestamps Section -->
+      {chapter.problemSet.timestamps && chapter.problemSet.timestamps.length > 0 && (
+        <details class="ps-compact-details">
+          <summary class="ps-compact-summary">
+            <span class="summary-label">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              Problem Timestamps ({chapter.problemSet.timestamps.length})
+            </span>
+            <span class="summary-chevron">▾</span>
+          </summary>
+          <div class="ps-compact-drawer">
+            {chapter.problemSet.summary && (
+              <p class="ps-drawer-desc">{chapter.problemSet.summary}</p>
+            )}
+            <div class="ps-timestamps-grid">
+              {chapter.problemSet.timestamps.map((ts) => (
+                chapter.problemSet?.youtubeId && ts.seconds > 0 ? (
+                  <a
+                    href={`https://youtu.be/${chapter.problemSet.youtubeId}?t=${ts.seconds}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="ps-ts-chip"
+                    title={`Jump to ${ts.label}`}
+                  >
+                    <span class="ts-chip-time">{ts.time}</span>
+                    <span class="ts-chip-label">{ts.label}</span>
+                  </a>
+                ) : (
+                  <div class="ps-ts-chip pending">
+                    <span class="ts-chip-time">{ts.time}</span>
+                    <span class="ts-chip-label">{ts.label}</span>
+                  </div>
+                )
+              ))}
+            </div>
+          </div>
+        </details>
+      )}
+    </div>
+  )}
+</section>
+
+<style>
+  .chapter-row-wrapper {
+    margin: 2.5rem 0 3.5rem 0;
+    padding: 1.5rem;
+    border-radius: 14px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .chapter-row-wrapper:hover {
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .chapter-row-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    padding-bottom: 0.75rem;
+  }
+
+  .chapter-badge-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .chapter-number-pill {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(2, 132, 199, 0.18);
+    color: #38bdf8;
+    border: 1px solid rgba(2, 132, 199, 0.35);
+  }
+
+  .chapter-title-text {
+    margin: 0 !important;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--sl-color-white);
+    scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem);
+  }
+
+  .chapter-time-pill {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: var(--sl-color-gray-5);
+  }
+
+  .chapter-summary-text {
+    font-size: 0.96rem;
+    color: var(--sl-color-gray-2);
+    margin: 0.5rem 0 1.25rem 0;
+    line-height: 1.55;
+  }
+
+  /* Full-width Video Card */
+  .video-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 12px;
+    overflow: hidden;
+    padding: 1.25rem;
+    transition: all 0.2s ease;
+  }
+
+  .video-card.is-watched {
+    border-color: rgba(16, 185, 129, 0.5);
+    background: rgba(16, 185, 129, 0.04);
+  }
+
+  .card-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .video-type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 5px;
+  }
+
+  .lecture-badge {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  /* Tracker Button */
+  .track-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--sl-color-gray-4);
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2);
+    transition: all 0.15s ease;
+  }
+
+  .track-btn:hover {
+    background: var(--sl-color-gray-4);
+    color: var(--sl-color-white);
+  }
+
+  .track-btn.completed {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: #10b981;
+    color: #10b981;
+  }
+
+  /* 16:9 Full-Width Video Preview */
+  .video-preview-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #090d16;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .video-preview-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .video-preview-link:hover img {
+    transform: scale(1.02);
+  }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: rgba(0, 0, 0, 0.38);
+    transition: background 0.2s ease;
+  }
+
+  .video-preview-link:hover .play-overlay {
+    background: rgba(0, 0, 0, 0.18);
+  }
+
+  .play-btn-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.55);
+    transition: transform 0.2s ease;
+  }
+
+  .video-preview-link:hover .play-btn-circle {
+    transform: scale(1.08);
+  }
+
+  .play-overlay-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
+    letter-spacing: 0.01em;
+  }
+
+  /* Placeholder for in-production videos */
+  .video-preview-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed var(--sl-color-gray-4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .placeholder-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .placeholder-text {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .placeholder-sub {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    margin-top: 0.3rem;
+  }
+
+  /* Timestamps section under lecture */
+  .chapter-derivation-timestamps {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--sl-color-gray-5);
+  }
+
+  .timestamp-section-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--sl-color-gray-3);
+    margin-bottom: 0.6rem;
+  }
+
+  .timestamp-pill-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .timestamp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 6px;
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2) !important;
+    text-decoration: none !important;
+    font-size: 0.84rem;
+    transition: all 0.15s ease;
+  }
+
+  .timestamp-pill:hover {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black) !important;
+  }
+
+  .ts-time {
+    font-family: var(--sl-font-mono);
+    font-weight: 700;
+    color: var(--sl-color-accent);
+  }
+
+  .timestamp-pill:hover .ts-time {
+    color: var(--sl-color-black);
+  }
+
+  .ts-label {
+    white-space: nowrap;
+  }
+
+  /* =========================================================
+     COMPACT 1-2 LINE COMPANION PROBLEM SET CARD
+     ========================================================= */
+  .companion-problemset-compact {
+    margin-top: 0.85rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.05);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .companion-problemset-compact.is-watched {
+    border-color: rgba(16, 185, 129, 0.45);
+    background: rgba(16, 185, 129, 0.04);
+  }
+
+  /* Line 1: Identity & Action Buttons */
+  .ps-compact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .ps-compact-identity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.88rem;
+  }
+
+  .ps-compact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .ps-compact-title {
+    font-weight: 700;
+    color: var(--sl-color-white);
+  }
+
+  .ps-compact-time {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    font-family: var(--sl-font-mono);
+  }
+
+  .ps-compact-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .ps-compact-yt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: #f59e0b;
+    color: #0f172a !important;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-decoration: none !important;
+    box-shadow: 0 1px 6px rgba(245, 158, 11, 0.25);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  .ps-compact-yt-btn:hover {
+    background: #d97706;
+    color: #ffffff !important;
+    transform: translateY(-1px);
+  }
+
+  .track-compact-btn {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  /* Line 2: Expandable Timestamps */
+  .ps-compact-details {
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    border-top: 1px dashed rgba(245, 158, 11, 0.18);
+  }
+
+  .ps-compact-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    padding: 0.15rem 0;
+    user-select: none;
+    transition: color 0.15s ease;
+  }
+
+  .ps-compact-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ps-compact-summary::marker {
+    display: none;
+  }
+
+  .ps-compact-summary:hover {
+    color: #fbbf24;
+  }
+
+  .summary-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .summary-chevron {
+    display: inline-block;
+    font-size: 0.75rem;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ps-compact-details[open] .summary-chevron {
+    transform: rotate(180deg);
+  }
+
+  .ps-compact-drawer {
+    margin-top: 0.5rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .ps-drawer-desc {
+    font-size: 0.84rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.45;
+    margin: 0 0 0.5rem 0 !important;
+  }
+
+  .ps-timestamps-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .ps-ts-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    color: var(--sl-color-gray-2) !important;
+    text-decoration: none !important;
+    font-size: 0.82rem;
+    transition: all 0.15s ease;
+  }
+
+  .ps-ts-chip:hover {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    border-color: #f59e0b !important;
+  }
+
+  .ts-chip-time {
+    font-family: var(--sl-font-mono);
+    font-weight: 700;
+    color: #fbbf24;
+  }
+
+  .ps-ts-chip:hover .ts-chip-time {
+    color: #0f172a;
+  }
+
+  .ts-chip-label {
+    white-space: nowrap;
+  }
+
+  .ps-ts-chip.pending {
+    opacity: 0.6;
+    cursor: default;
+  }
+</style>
+
+<script>
+  function setupChapterRowTrackers() {
+    const buttons = document.querySelectorAll('.track-btn');
+    buttons.forEach((btn) => {
+      const slug = btn.getAttribute('data-track-slug');
+      if (!slug) return;
+
+      const card = btn.closest('.video-card, .companion-problemset-compact');
+      const textSpan = btn.querySelector('.track-label');
+      const iconSpan = btn.querySelector('.track-icon');
+      const isPs = btn.classList.contains('track-ps-btn');
+
+      const storageKey = `qp_watched_${slug}`;
+
+      function updateUI(completed: boolean) {
+        if (completed) {
+          card?.classList.add('is-watched');
+          btn?.classList.add('completed');
+          btn?.setAttribute('aria-pressed', 'true');
+          if (textSpan) textSpan.textContent = isPs ? 'Solved ✓' : 'Watched ✓';
+          if (iconSpan) iconSpan.textContent = '●';
+        } else {
+          card?.classList.remove('is-watched');
+          btn?.classList.remove('completed');
+          btn?.setAttribute('aria-pressed', 'false');
+          if (textSpan) textSpan.textContent = isPs ? 'Mark Solved' : 'Mark Watched';
+          if (iconSpan) iconSpan.textContent = '○';
+        }
+      }
+
+      // Initial read
+      const isCompleted = localStorage.getItem(storageKey) === 'true';
+      updateUI(isCompleted);
+
+      // Click toggle
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const current = localStorage.getItem(storageKey) === 'true';
+        const next = !current;
+        localStorage.setItem(storageKey, next ? 'true' : 'false');
+        updateUI(next);
+
+        window.dispatchEvent(
+          new CustomEvent('qp:progress-update', {
+            detail: { slug, isCompleted: next },
+          })
+        );
+      });
+    });
+  }
+
+  setupChapterRowTrackers();
+  document.addEventListener('astro:page-load', setupChapterRowTrackers);
+</script>

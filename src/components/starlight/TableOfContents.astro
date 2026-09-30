@@ -1,0 +1,167 @@
+---
+// src/components/starlight/TableOfContents.astro
+import { thermodynamicsBook } from '../../data/books/thermodynamics';
+import { quantumMechanicsBook } from '../../data/books/quantum-mechanics';
+
+const { toc } = Astro.locals.starlightRoute;
+const slug = Astro.locals.starlightRoute?.entry?.slug ?? Astro.url.pathname.replace(/^\/|\/$/g, '');
+
+let book = null;
+if (slug === 'thermodynamics') {
+  book = thermodynamicsBook;
+} else if (slug === 'quantum-mechanics') {
+  book = quantumMechanicsBook;
+}
+
+const items = book
+  ? [
+      { slug: '_top', text: Astro.locals.t('tableOfContents.overview') || 'Overview' },
+      ...book.chapters.map((ch, idx) => ({
+        slug: `ch-${idx + 1}`,
+        text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
+      })),
+    ]
+  : (toc?.items ?? []);
+---
+
+{
+  (book || toc) && (
+    <starlight-toc data-min-h={toc?.minHeadingLevel ?? 2} data-max-h={toc?.maxHeadingLevel ?? 3}>
+      <nav aria-labelledby="starlight__on-this-page">
+        <h2 id="starlight__on-this-page">{Astro.locals.t('tableOfContents.onThisPage')}</h2>
+        <ul class="custom-toc-list">
+          {items.map((item) => (
+            <li>
+              <a href={'#' + item.slug}>
+                <span>{item.text}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </starlight-toc>
+  )
+}
+
+<script>
+  const PAGE_TITLE_ID = '_top';
+  class StarlightTOC extends HTMLElement {
+    _current: HTMLAnchorElement | null = null;
+    minH = parseInt(this.dataset.minH || '2', 10);
+    maxH = parseInt(this.dataset.maxH || '3', 10);
+    tocHeadingSelector = `h1#${PAGE_TITLE_ID},:where(h2,h3)[id]`;
+
+    set current(link: HTMLAnchorElement | null) {
+      if (link === this._current) return;
+      if (this._current) this._current.removeAttribute('aria-current');
+      if (link) link.setAttribute('aria-current', 'true');
+      this._current = link;
+    }
+
+    onIdle = (cb: () => void) => (window.requestIdleCallback || ((fn: () => void) => setTimeout(fn, 1)))(cb);
+
+    constructor() {
+      super();
+      this._current = this.querySelector('a[aria-current="true"]');
+      this.onIdle(() => this.init());
+    }
+
+    init = () => {
+      const links = Array.from(this.querySelectorAll<HTMLAnchorElement>('a'));
+      if (links.length > 0 && !this._current) {
+        this.current = links[0];
+      }
+      const isHeading = (el: Element) => el.matches(this.tocHeadingSelector);
+      const getElementHeading = (el: Element | null): Element | null => {
+        let curr = el;
+        while (curr) {
+          if (curr.matches('.sl-markdown-content, main > *')) return document.getElementById(PAGE_TITLE_ID);
+          if (isHeading(curr)) return curr;
+          const childHeading = curr.querySelector(this.tocHeadingSelector);
+          if (childHeading) return childHeading;
+          let prev = curr.previousElementSibling;
+          while (prev?.lastElementChild) prev = prev.lastElementChild;
+          curr = prev ?? curr.parentElement;
+        }
+        return null;
+      };
+
+      const setCurrent = (entries: IntersectionObserverEntry[]) => {
+        for (const { isIntersecting, target } of entries) {
+          if (!isIntersecting) continue;
+          const heading = getElementHeading(target);
+          if (!heading) continue;
+          const link = links.find((l) => l.hash === '#' + encodeURIComponent(heading.id));
+          if (link) {
+            this.current = link;
+            break;
+          }
+        }
+      };
+
+      const toObserve = document.querySelectorAll([
+        `main :where(${this.tocHeadingSelector})`,
+        `main :where(${this.tocHeadingSelector}, .sl-heading-wrapper) ~ *:not(:has(${this.tocHeadingSelector}))`,
+        `main .sl-markdown-content > *:not(:has(${this.tocHeadingSelector}))`,
+        `main > *:not(:has(${this.tocHeadingSelector}))`
+      ].join());
+
+      let observer: IntersectionObserver | undefined;
+      const observe = () => {
+        if (observer) return;
+        observer = new IntersectionObserver(setCurrent, { rootMargin: this.getRootMargin() });
+        toObserve.forEach((h) => observer!.observe(h));
+      };
+      observe();
+
+      window.addEventListener('resize', () => {
+        if (observer) {
+          observer.disconnect();
+          observer = undefined;
+        }
+        this.onIdle(observe);
+      });
+    };
+
+    getRootMargin() {
+      const headerH = document.querySelector('header')?.getBoundingClientRect().height || 0;
+      const top = headerH + 32;
+      return `-${top}px 0% ${top + 53 - document.documentElement.clientHeight}px`;
+    }
+  }
+
+  if (!customElements.get('starlight-toc')) {
+    customElements.define('starlight-toc', StarlightTOC);
+  }
+</script>
+
+<style>
+  ul.custom-toc-list {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+  }
+  ul.custom-toc-list li {
+    margin: 0;
+    padding: 0;
+  }
+  ul.custom-toc-list a {
+    display: block;
+    border-radius: 0.25rem;
+    padding-block: 0.35rem;
+    padding-inline: 0.5rem;
+    line-height: 1.35;
+    font-size: var(--sl-text-xs);
+    text-decoration: none;
+    color: var(--sl-color-gray-3);
+    overflow-wrap: anywhere;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  ul.custom-toc-list a:hover {
+    color: var(--sl-color-white);
+  }
+  ul.custom-toc-list a[aria-current='true'] {
+    color: var(--sl-color-text-accent) !important;
+    font-weight: 600;
+  }
+</style>

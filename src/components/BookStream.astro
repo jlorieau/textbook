@@ -1,0 +1,387 @@
+---
+// src/components/BookStream.astro
+import type { BookData } from '../types/book';
+import ChapterRow from './ChapterRow.astro';
+import ChannelBanner from './ChannelBanner.astro';
+
+interface Props {
+  book: BookData;
+}
+
+const { book } = Astro.props;
+
+// Collect tracking slugs for progress calculation
+const allTrackingSlugs = book.chapters.flatMap((ch, idx) => {
+  const slugs = [`${book.id}-ch${idx + 1}-${ch.id}`];
+  if (ch.problemSet) {
+    slugs.push(`${book.id}-ps${idx + 1}-${ch.id}`);
+  }
+  return slugs;
+});
+
+const totalLectures = book.chapters.length;
+const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).length;
+---
+
+<div class={`book-stream-container book-theme-${book.colorScheme}`} data-book-id={book.id}>
+  <!-- Book Hero Banner -->
+  <header class="book-hero-banner not-content">
+    <div class="book-hero-layout">
+      {book.coverImage && (
+        <div class="book-hero-cover-wrap">
+          <img
+            src={book.coverImage}
+            alt={`${book.title} Cover`}
+            class="book-hero-cover-img"
+            loading="eager"
+            width="170"
+            height="227"
+          />
+        </div>
+      )}
+
+      <div class="book-hero-content">
+        <div class="book-hero-meta">
+          <h1 class="book-main-title">{book.title}</h1>
+          <p class="book-tagline-text">{book.tagline}</p>
+          <p class="book-desc-text">{book.description}</p>
+        </div>
+
+        <div class="book-stats-grid">
+          <div class="stat-pill">
+            <span class="stat-val">{totalLectures}</span>
+            <span class="stat-lbl">Lectures</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val">{totalProblemSets}</span>
+            <span class="stat-lbl">Problem Sets</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val">HD / 4K</span>
+            <span class="stat-lbl">Manim Visuals</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interactive Overall Book Progress Bar -->
+  <div class="book-overall-progress" id={`progress-panel-${book.id}`}>
+    <div class="progress-info-row">
+      <span class="progress-title-lbl">Overall Volume Mastery</span>
+      <span class="progress-percent-lbl" id={`progress-text-${book.id}`}>0%</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id={`progress-bar-${book.id}`}></div>
+    </div>
+    <div class="progress-counter-sub" id={`progress-count-${book.id}`}>
+      0 of {allTrackingSlugs.length} modules completed
+    </div>
+  </div>
+
+  <!-- Sticky In-Page Chapter Navigator -->
+  <nav class="sticky-chapter-nav" aria-label="Book Chapters Navigator">
+    <div class="nav-title">Jump to Chapter:</div>
+    <div class="nav-pills-list">
+      {book.chapters.map((ch, idx) => (
+        <a href={`#ch-${idx + 1}`} class="nav-pill-item">
+          <span class="nav-num">Ch {idx + 1}</span>
+          <span class="nav-name">{ch.shortTitle || ch.title}</span>
+        </a>
+      ))}
+    </div>
+  </nav>
+
+  <!-- Sequential Video Chapters -->
+  <div class="sequential-chapters-list">
+    {book.chapters.map((chapter, idx) => (
+      <ChapterRow
+        chapter={chapter}
+        chapterNumber={idx + 1}
+        bookId={book.id}
+      />
+    ))}
+  </div>
+
+  <!-- Main YouTube Channel Spotlight -->
+  <ChannelBanner />
+</div>
+
+<style>
+  .book-stream-container {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  /* Book Hero */
+  .book-hero-banner {
+    padding: 2rem 2.25rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid var(--sl-color-gray-5);
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .book-hero-layout {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .book-hero-cover-wrap {
+    width: 165px;
+    flex-shrink: 0;
+    aspect-ratio: 3 / 4;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000000;
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.55);
+  }
+
+  .book-hero-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .book-hero-content {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .book-hero-layout {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+    .book-hero-cover-wrap {
+      width: 140px;
+    }
+  }
+
+  .book-volume-badge {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(2, 132, 199, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(2, 132, 199, 0.4);
+    margin-bottom: 0.75rem;
+  }
+
+  .book-theme-amber .book-volume-badge {
+    background: rgba(217, 119, 6, 0.2);
+    color: #fbbf24;
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+
+  .book-main-title {
+    margin: 0 0 0.5rem 0 !important;
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--sl-color-white);
+  }
+
+  .book-tagline-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--sl-color-accent);
+    margin: 0 0 0.75rem 0 !important;
+  }
+
+  .book-desc-text {
+    font-size: 0.98rem;
+    color: var(--sl-color-gray-2);
+    line-height: 1.6;
+    max-width: 850px;
+    margin: 0 0 1.5rem 0 !important;
+  }
+
+  .book-stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .stat-pill {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.45rem 1rem;
+    border-radius: 8px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+  }
+
+  .stat-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--sl-color-white);
+  }
+
+  .stat-lbl {
+    font-size: 0.82rem;
+    color: var(--sl-color-gray-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Overall Progress */
+  .book-overall-progress {
+    margin: 1.5rem 0 2rem 0;
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+  }
+
+  .progress-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+
+  .progress-title-lbl {
+    font-size: 0.92rem;
+    color: var(--sl-color-gray-2);
+  }
+
+  .progress-percent-lbl {
+    font-size: 1.1rem;
+    color: #10b981;
+    font-family: var(--sl-font-mono);
+  }
+
+  .progress-bar-track {
+    width: 100%;
+    height: 10px;
+    background: var(--sl-color-gray-5);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
+    border-radius: 9999px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .book-theme-amber .progress-bar-fill {
+    background: linear-gradient(90deg, #fbbf24 0%, #10b981 100%);
+  }
+
+  .progress-counter-sub {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    margin-top: 0.4rem;
+  }
+
+  /* Sticky In-Page Navigator */
+  .sticky-chapter-nav {
+    position: sticky;
+    top: 4.5rem;
+    z-index: 20;
+    margin: 1.5rem 0 2.5rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--sl-color-gray-5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    overflow-x: auto;
+  }
+
+  .nav-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-gray-3);
+    flex-shrink: 0;
+  }
+
+  .nav-pills-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .nav-pill-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-gray-2) !important;
+    text-decoration: none !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+
+  .nav-pill-item:hover {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black) !important;
+    border-color: var(--sl-color-accent);
+  }
+
+  .nav-num {
+    font-weight: 700;
+    color: var(--sl-color-accent);
+  }
+
+  .nav-pill-item:hover .nav-num {
+    color: var(--sl-color-black);
+  }
+</style>
+
+<script define:vars={{ bookId: book.id, slugs: allTrackingSlugs }}>
+  function updateBookOverallProgress() {
+    const total = slugs.length;
+    if (total === 0) return;
+
+    let completed = 0;
+    slugs.forEach((slug) => {
+      if (localStorage.getItem(`qp_watched_${slug}`) === 'true') {
+        completed++;
+      }
+    });
+
+    const percent = Math.round((completed / total) * 100);
+    const bar = document.getElementById(`progress-bar-${bookId}`);
+    const text = document.getElementById(`progress-text-${bookId}`);
+    const count = document.getElementById(`progress-count-${bookId}`);
+
+    if (bar) bar.style.width = `${percent}%`;
+    if (text) text.textContent = `${percent}%`;
+    if (count) count.textContent = `${completed} of ${total} modules completed`;
+  }
+
+  updateBookOverallProgress();
+  window.addEventListener('qp:progress-update', updateBookOverallProgress);
+  document.addEventListener('astro:page-load', updateBookOverallProgress);
+</script>

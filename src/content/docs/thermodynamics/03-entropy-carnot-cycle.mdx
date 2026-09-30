@@ -1,0 +1,95 @@
+---
+title: "3. Entropy & the Carnot Cycle"
+description: "Discovering entropy without quantum or statistical mechanics through the 4 stages of the ideal Carnot cycle."
+---
+
+import VideoCard from '../../../components/VideoCard.astro';
+import TimestampLink from '../../../components/TimestampLink.astro';
+import ProblemDrawer from '../../../components/ProblemDrawer.astro';
+
+<VideoCard
+  videoId="KCFKsyrFnnw"
+  title="Entropy and the Carnot Cycle: How We Discovered Entropy"
+  slug="thermo-03-entropy-carnot-cycle"
+  duration="17:05"
+/>
+
+## 1. Why Is Entropy Confusing?
+
+Part of the reason people find entropy confusing is that modern textbooks immediately introduce quantum and statistical mechanical microstates ($S = k_B \ln \Omega$).
+
+Entropy is an energy-related quantity that is distinct from the pure kinetic energy of gas particles (which is already described by internal energy $U$). 
+
+How did 19th-century physicists discover that entropy exists **before** the discovery of atoms, quanta, or statistical mechanics? They discovered it through the maximum theoretical efficiency of heat engines: **the Carnot Cycle**.
+
+---
+
+## 2. The Four Stages of the Carnot Cycle
+
+A Carnot engine operates between a hot reservoir at $T_H$ and a cold reservoir at $T_C$:
+
+```text
+State 1 ──(Isothermal Expansion at T_H)──> State 2
+        ──(Adiabatic Expansion: T_H -> T_C)──> State 3
+        ──(Isothermal Compression at T_C)──> State 4
+        ──(Adiabatic Compression: T_C -> T_H)──> State 1
+```
+
+1. **Stage 1 (Isothermal Expansion at $T_H$)**: Gas absorbs heat $q_H > 0$ reversibly while expanding:
+   ```math
+   \Delta U_1 = 0 \implies q_H = -w_1 = n R T_H \ln\left(\frac{V_2}{V_1}\right)
+   ```
+2. **Stage 2 (Adiabatic Expansion)**: Thermally insulated ($q_2 = 0$). Gas expands, doing work at the expense of internal energy, dropping from $T_H$ to $T_C$.
+3. **Stage 3 (Isothermal Compression at $T_C$)**: Gas is compressed reversibly, rejecting heat $q_C < 0$ to the cold sink:
+   ```math
+   q_C = n R T_C \ln\left(\frac{V_4}{V_3}\right)
+   ```
+4. **Stage 4 (Adiabatic Compression)**: Thermally insulated ($q_4 = 0$). Work is done on the gas, heating it back from $T_C$ to $T_H$.
+
+---
+
+## 3. The Discovery of a New State Function ($S$)
+
+For the entire reversible cycle, the ratio of heat to temperature reveals a miraculous cancellation:
+
+```math
+\frac{q_H}{T_H} + \frac{q_C}{T_C} = 0 \implies \oint \frac{dq_{\text{rev}}}{T} = 0
+```
+
+Because this cyclic integral is zero, $\frac{dq_{\text{rev}}}{T}$ must be the differential of an unknown state function. Rudolf Clausius named this state function **Entropy ($S$)**:
+
+```math
+dS = \frac{dq_{\text{rev}}}{T}, \quad \Delta S = \int \frac{dq_{\text{rev}}}{T}
+```
+
+The engine generates work by transferring heat between reservoirs, and entropy is the fundamental bookkeeping variable that dictates the conversion limit:
+
+```math
+\eta_{\text{Carnot}} = 1 - \frac{T_C}{T_H}
+```
+
+---
+
+## Practice Problem
+
+<ProblemDrawer
+  problemNumber="1"
+  title="Carnot Engine Maximum Efficiency"
+  hint="Recall \eta = 1 - \frac{T_C}{T_H} with temperatures in Kelvin."
+>
+  A geothermal power plant operates with steam at $250^\circ\text{C}$ and cooling water at $20^\circ\text{C}$. What is the maximum theoretical efficiency of the plant?
+
+  <div slot="solution">
+    1. Convert temperatures to Kelvin:
+    ```math
+    T_H = 250 + 273.15 = 523.15 \text{ K}
+    ```
+    ```math
+    T_C = 20 + 273.15 = 293.15 \text{ K}
+    ```
+    2. Apply Carnot efficiency:
+    ```math
+    \eta_{\text{max}} = 1 - \frac{293.15}{523.15} \approx 1 - 0.560 = 0.440 \quad (44.0\%)
+    ```
+  </div>
+</ProblemDrawer>
