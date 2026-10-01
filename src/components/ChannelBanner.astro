@@ -2,16 +2,16 @@
 // src/components/ChannelBanner.astro
 ---
 
-<div class="channel-spotlight-card not-content">
+<a
+  href="https://www.youtube.com/@ProfessorJustinLorieau"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="channel-spotlight-card not-content"
+  title="Visit @ProfessorJustinLorieau on YouTube"
+>
   <div class="channel-flex-wrap">
     <!-- Channel Avatar Thumbnail from YouTube -->
-    <a
-      href="https://www.youtube.com/@ProfessorJustinLorieau"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="channel-avatar-link"
-      title="Open @ProfessorJustinLorieau on YouTube"
-    >
+    <div class="channel-avatar-wrap">
       <img
         src="/channel-avatar.jpg"
         alt="Professor Justin Lorieau YouTube Avatar"
@@ -20,7 +20,7 @@
         height="80"
       />
       <span class="avatar-play-icon">▶</span>
-    </a>
+    </div>
 
     <!-- Channel Text Info -->
     <div class="channel-text-col">
@@ -31,14 +31,9 @@
           </svg>
           Official YouTube Channel
         </span>
-        <a
-          href="https://www.youtube.com/@ProfessorJustinLorieau"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="channel-handle"
-        >
+        <span class="channel-handle">
           @ProfessorJustinLorieau
-        </a>
+        </span>
       </div>
 
       <h1 class="channel-title">Professor Justin Lorieau</h1>
@@ -50,29 +45,35 @@
 
     <!-- CTA Column -->
     <div class="channel-cta-col">
-      <a
-        href="https://www.youtube.com/@ProfessorJustinLorieau"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="channel-sub-btn"
-      >
+      <span class="channel-sub-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
           <path d="M8 5v14l11-7z" />
         </svg>
         Visit Channel on YouTube ↗
-      </a>
+      </span>
     </div>
   </div>
-</div>
+</a>
 
 <style>
   .channel-spotlight-card {
+    display: block;
     margin: 0.25rem 0 1.25rem 0;
     padding: 1.15rem 1.5rem;
     border-radius: 14px;
     background: var(--qp-banner-bg);
     border: 1px solid var(--qp-banner-border);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    text-decoration: none !important;
+    color: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .channel-spotlight-card:hover {
+    transform: translateY(-2px);
+    border-color: #ef4444;
+    box-shadow: 0 8px 30px rgba(239, 68, 68, 0.22);
   }
 
   .channel-flex-wrap {
@@ -83,7 +84,7 @@
   }
 
   /* Avatar from YouTube */
-  .channel-avatar-link {
+  .channel-avatar-wrap {
     position: relative;
     display: block;
     width: 76px;
@@ -96,7 +97,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
-  .channel-avatar-link:hover {
+  .channel-spotlight-card:hover .channel-avatar-wrap {
     transform: scale(1.05);
     box-shadow: 0 0 24px rgba(239, 68, 68, 0.6);
   }
@@ -158,10 +159,11 @@
     font-family: var(--sl-font-mono);
     color: var(--sl-color-gray-3) !important;
     text-decoration: none !important;
+    transition: color 0.15s ease;
   }
 
-  .channel-handle:hover {
-    color: #f87171 !important;
+  .channel-spotlight-card:hover .channel-handle {
+    color: var(--qp-badge-red-text) !important;
     text-decoration: underline !important;
   }
 
@@ -207,15 +209,9 @@
     transition: transform 0.15s ease, background 0.15s ease;
   }
 
-  .channel-sub-btn:hover {
+  .channel-spotlight-card:hover .channel-sub-btn {
     background: #dc2626;
     transform: translateY(-1px);
-  }
-
-  .sub-hint {
-    font-size: 0.75rem;
-    color: var(--sl-color-gray-3);
-    white-space: nowrap;
   }
 
   @media (max-width: 768px) {
