@@ -21,14 +21,11 @@ export const quantumMechanicsBook: BookData = {
       summary:
         'Functions are the hidden infrastructure of the physical universe, yet most math classes treat them as rigid black boxes where numbers go in and numbers come out.',
       timestamps: [
-        { time: '0:00', seconds: 0, label: 'Start' },
-        { time: '0:04', seconds: 4, label: 'Introduction' },
         { time: '0:43', seconds: 43, label: 'Linear Functions' },
         { time: '3:35', seconds: 215, label: 'Linear Plots' },
         { time: '5:41', seconds: 341, label: 'Higher Order Polynomials' },
         { time: '6:47', seconds: 407, label: 'Quadratic Pricing Example' },
         { time: '9:21', seconds: 561, label: 'Quadratic Plot' },
-        { time: '11:13', seconds: 673, label: 'Level 2' },
         { time: '11:17', seconds: 677, label: 'Function Domains' },
       ],
       keyEquations: [
@@ -42,7 +39,6 @@ export const quantumMechanicsBook: BookData = {
         summary:
           'Mastering functions requires more than memorizing f(x) notation—you need to understand domain boundaries, coordinate system transformations, physical assumptions, and exponential growth models.',
         timestamps: [
-          { time: '0:00', seconds: 0, label: 'Start' },
           { time: '0:11', seconds: 11, label: 'Question 1: Unit Circle Problem' },
           { time: '2:38', seconds: 158, label: 'Question 2: Parametric Functions' },
           { time: '4:23', seconds: 263, label: 'Question 3: Equivalent Functions' },
@@ -61,9 +57,7 @@ export const quantumMechanicsBook: BookData = {
       summary:
         'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
       timestamps: [
-        { time: '0:00', seconds: 0, label: 'Start' },
-        { time: '0:04', seconds: 4, label: 'Intro' },
-        { time: '0:52', seconds: 52, label: 'Title Card' },
+        { time: '0:04', seconds: 4, label: 'Introduction' },
         { time: '0:58', seconds: 58, label: 'Why is Calculus Important?' },
         { time: '3:40', seconds: 220, label: 'Where Calculus Comes From' },
         { time: '7:47', seconds: 467, label: 'Where Derivatives Come From' },
@@ -110,7 +104,7 @@ export const quantumMechanicsBook: BookData = {
       summary:
         'Doing math and calculus in Cartesian coordinates is like navigating an entire road trip solely from a satellite view—convenient on a flat map, but completely unnatural when the terrain curves.',
       timestamps: [
-        { time: '0:00', seconds: 0, label: 'Intro' },
+        { time: '0:00', seconds: 0, label: 'Introduction' },
         { time: '1:25', seconds: 85, label: 'Polar Coordinates' },
         { time: '8:59', seconds: 539, label: 'Jacobians' },
         { time: '14:02', seconds: 842, label: 'Spherical Polar Coordinates' },
@@ -151,7 +145,6 @@ export const quantumMechanicsBook: BookData = {
         summary:
           'Mastering complex numbers requires more than memorizing formulas—you need to understand their geometry, phase, and the time evolution of frequencies.',
         timestamps: [
-          { time: '0:00', seconds: 0, label: 'Introduction' },
           { time: '0:15', seconds: 15, label: 'Problem 1: Addition of Complex Numbers' },
           { time: '1:04', seconds: 64, label: 'Problem 2: Magnitude & Complex Conjugate' },
           { time: '2:26', seconds: 146, label: "Problem 3: Phase Angle & Euler's Formula" },

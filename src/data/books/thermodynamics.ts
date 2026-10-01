@@ -21,9 +21,7 @@ export const thermodynamicsBook: BookData = {
       summary:
         'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
       timestamps: [
-        { time: '0:00', seconds: 0, label: 'Start' },
-        { time: '0:04', seconds: 4, label: 'Intro' },
-        { time: '0:52', seconds: 52, label: 'Title Card' },
+        { time: '0:04', seconds: 4, label: 'Introduction' },
         { time: '0:58', seconds: 58, label: 'Why is Calculus Important?' },
         { time: '3:40', seconds: 220, label: 'Where Calculus Comes From' },
         { time: '7:47', seconds: 467, label: 'Where Derivatives Come From' },
@@ -70,9 +68,7 @@ export const thermodynamicsBook: BookData = {
       summary:
         'Standard textbooks introduce state and path functions with abstract equations, leaving students wondering why physics needs both.',
       timestamps: [
-        { time: '0:00', seconds: 0, label: 'Intro: What are Path Functions?' },
-        { time: '1:54', seconds: 114, label: 'Intro: Cellphone Example' },
-        { time: '3:11', seconds: 191, label: 'Title Card' },
+        { time: '0:00', seconds: 0, label: 'Introduction: What are Path Functions?' },
         { time: '3:16', seconds: 196, label: 'Pre-requisites' },
         { time: '3:30', seconds: 210, label: 'Enthalpy, Internal Energy, Work and Heat' },
         { time: '5:53', seconds: 353, label: 'Irreversible Work' },
