@@ -127,7 +127,7 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
   .book-hero-banner {
     padding: 2rem 2.25rem;
     border-radius: 16px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    background: var(--qp-hero-banner-bg);
     border: 1px solid var(--sl-color-gray-5);
     margin-bottom: 2rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -181,16 +181,16 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     letter-spacing: 0.06em;
     padding: 0.25rem 0.75rem;
     border-radius: 6px;
-    background: rgba(2, 132, 199, 0.2);
-    color: #38bdf8;
-    border: 1px solid rgba(2, 132, 199, 0.4);
+    background: var(--qp-badge-blue-bg);
+    color: var(--qp-badge-blue-text);
+    border: 1px solid var(--qp-badge-blue-border);
     margin-bottom: 0.75rem;
   }
 
   .book-theme-amber .book-volume-badge {
-    background: rgba(217, 119, 6, 0.2);
-    color: #fbbf24;
-    border-color: rgba(217, 119, 6, 0.4);
+    background: var(--qp-badge-amber-bg);
+    color: var(--qp-badge-amber-text);
+    border-color: var(--qp-badge-amber-border);
   }
 
   .book-main-title {
