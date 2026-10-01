@@ -108,6 +108,10 @@ const thermoPsCount = thermodynamicsBook.chapters.filter((c) => Boolean(c.proble
   </div>
 
   <div class="dashboard-footer">
+    <a href="/about/" class="btn-colophon-link">
+      <span>ℹ️ About & Colophon</span>
+      <span class="sub-colophon">(Manim · Astro · Gemini 3.8 Flash)</span>
+    </a>
     <button type="button" id="reset-all-btn" class="btn-reset">
       ↻ Reset All Course Progress
     </button>
@@ -291,9 +295,31 @@ const thermoPsCount = thermodynamicsBook.chapters.filter((c) => Boolean(c.proble
     transform: translateY(-1px);
   }
   .dashboard-footer {
-    text-align: center;
-    padding-top: 0.65rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--sl-color-gray-5);
+  }
+  .btn-colophon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.8rem;
+    text-decoration: none !important;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    transition: color 0.15s ease;
+  }
+  .btn-colophon-link:hover {
+    color: var(--sl-color-accent);
+  }
+  .btn-colophon-link .sub-colophon {
+    font-size: 0.75rem;
+    opacity: 0.7;
   }
   .btn-reset {
     background: transparent;

@@ -50,6 +50,73 @@ export const quantumMechanicsBook: BookData = {
       },
     },
     {
+      id: 'calculus',
+      title: "Why You Can't Master Science Without Calculus",
+      shortTitle: 'Calculus Foundations',
+      duration: '26:15',
+      youtubeId: '-UWaZOkkPZ4',
+      summary:
+        'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
+      timestamps: [
+        { time: '0:00', seconds: 0, label: 'Start' },
+        { time: '0:04', seconds: 4, label: 'Intro' },
+        { time: '0:52', seconds: 52, label: 'Title Card' },
+        { time: '0:58', seconds: 58, label: 'Why is Calculus Important?' },
+        { time: '3:40', seconds: 220, label: 'Where Calculus Comes From' },
+        { time: '7:47', seconds: 467, label: 'Where Derivatives Come From' },
+        { time: '12:57', seconds: 777, label: 'Where Integrals Come From' },
+        { time: '16:00', seconds: 960, label: 'Speed Dating - Derivatives' },
+        { time: '20:16', seconds: 1216, label: 'Speed Dating - Integrals' },
+        { time: '25:11', seconds: 1511, label: 'Key Takeaways' },
+      ],
+      keyEquations: [
+        '\\frac{df}{dx} = \\lim_{\\Delta x \\to 0} \\frac{f(x+\\Delta x) - f(x)}{\\Delta x}',
+        '\\int_a^b f(x) dx = F(b) - F(a)',
+      ],
+    },
+    {
+      id: 'multivariate-derivatives',
+      title: 'Partial Derivatives and How Nature is Built on Them',
+      shortTitle: 'Multivariate Derivatives',
+      duration: '28:15',
+      youtubeId: 'mCXxHQDrFnA',
+      summary:
+        "Introductory calculus courses stop at single-variable slopes and tangent lines, but nature doesn't operate in one dimension.",
+      timestamps: [
+        { time: '0:00', seconds: 0, label: 'Introduction' },
+        { time: '0:45', seconds: 45, label: 'Linear Partial Derivatives' },
+        { time: '3:53', seconds: 233, label: 'Non-Linear Partial Derivatives' },
+        { time: '16:03', seconds: 963, label: 'Differential Equations' },
+        { time: '17:28', seconds: 1048, label: 'ODEs: The Harmonic Oscillator' },
+        { time: '23:32', seconds: 1412, label: 'Partial Differential Equations (PDEs)' },
+        { time: '27:39', seconds: 1659, label: 'Summary' },
+      ],
+      keyEquations: [
+        '\\frac{\\partial^2 f}{\\partial x \\partial y} = \\frac{\\partial^2 f}{\\partial y \\partial x}',
+        'df = \\left(\\frac{\\partial f}{\\partial x}\\right)_y dx + \\left(\\frac{\\partial f}{\\partial y}\\right)_x dy',
+      ],
+    },
+    {
+      id: 'coordinate-systems',
+      title: 'Why Cartesian Makes Math Harder Than It Needs to Be',
+      shortTitle: 'Curvilinear Coordinate Systems',
+      duration: '20:45',
+      youtubeId: 'szI2Ioh9w20',
+      summary:
+        'Doing math and calculus in Cartesian coordinates is like navigating an entire road trip solely from a satellite view—convenient on a flat map, but completely unnatural when the terrain curves.',
+      timestamps: [
+        { time: '0:00', seconds: 0, label: 'Intro' },
+        { time: '1:25', seconds: 85, label: 'Polar Coordinates' },
+        { time: '8:59', seconds: 539, label: 'Jacobians' },
+        { time: '14:02', seconds: 842, label: 'Spherical Polar Coordinates' },
+        { time: '20:01', seconds: 1201, label: 'Summary' },
+      ],
+      keyEquations: [
+        'dV = dx\\,dy\\,dz = r^2 \\sin\\theta\\,dr\\,d\\theta\\,d\\phi',
+        'x = r \\sin\\theta \\cos\\phi, \\quad y = r \\sin\\theta \\sin\\phi, \\quad z = r \\cos\\theta',
+      ],
+    },
+    {
       id: 'complex-numbers',
       title: "Why You Can't Master Physics Without Complex Numbers",
       shortTitle: 'Complex Numbers & Phase',
@@ -85,74 +152,6 @@ export const quantumMechanicsBook: BookData = {
           { time: '4:48', seconds: 288, label: 'Problem 4: Wave Frequency & Phase Evolution' },
         ],
       },
-    },
-    {
-      id: 'calculus',
-      title: "Why You Can't Master Science Without Calculus",
-      shortTitle: 'Calculus Foundations',
-      duration: '26:15',
-      youtubeId: '-UWaZOkkPZ4',
-      summary:
-        'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
-      timestamps: [
-        { time: '0:00', seconds: 0, label: 'Start' },
-        { time: '0:04', seconds: 4, label: 'Intro' },
-        { time: '0:52', seconds: 52, label: 'Title Card' },
-        { time: '0:58', seconds: 58, label: 'Why is Calculus Important?' },
-        { time: '3:40', seconds: 220, label: 'Where Calculus Comes From' },
-        { time: '7:47', seconds: 467, label: 'Where Derivatives Come From' },
-        { time: '12:57', seconds: 777, label: 'Where Integrals Come From' },
-        { time: '16:00', seconds: 960, label: 'Speed Dating - Derivatives' },
-        { time: '20:16', seconds: 1216, label: 'Speed Dating - Integrals' },
-        { time: '25:11', seconds: 1511, label: 'Key Takeaways' },
-      ],
-      keyEquations: [
-        '\\frac{df}{dx} = \\lim_{\\Delta x \\to 0} \\frac{f(x+\\Delta x) - f(x)}{\\Delta x}',
-        '\\int_a^b f(x) dx = F(b) - F(a)',
-      ],
-    },
-    {
-      id: 'coordinate-systems',
-      title: 'Why Cartesian Makes Math Harder Than It Needs to Be',
-      shortTitle: 'Curvilinear Coordinate Systems',
-      duration: '20:45',
-      youtubeId: 'szI2Ioh9w20',
-      summary:
-        'Doing math and calculus in Cartesian coordinates is like navigating an entire road trip solely from a satellite view—convenient on a flat map, but completely unnatural when the terrain curves.',
-      timestamps: [
-        { time: '0:00', seconds: 0, label: 'Intro' },
-        { time: '1:25', seconds: 85, label: 'Polar Coordinates' },
-        { time: '8:59', seconds: 539, label: 'Jacobians' },
-        { time: '14:02', seconds: 842, label: 'Spherical Polar Coordinates' },
-        { time: '20:01', seconds: 1201, label: 'Summary' },
-      ],
-      keyEquations: [
-        'dV = dx\\,dy\\,dz = r^2 \\sin\\theta\\,dr\\,d\\theta\\,d\\phi',
-        'x = r \\sin\\theta \\cos\\phi, \\quad y = r \\sin\\theta \\sin\\phi, \\quad z = r \\cos\\theta',
-      ],
-      // No problemSet here — demonstrates clean layout when problem set is omitted!
-    },
-    {
-      id: 'multivariate-derivatives',
-      title: 'Partial Derivatives and How Nature is Built on Them',
-      shortTitle: 'Multivariate Derivatives',
-      duration: '28:15',
-      youtubeId: 'mCXxHQDrFnA',
-      summary:
-        "Introductory calculus courses stop at single-variable slopes and tangent lines, but nature doesn't operate in one dimension.",
-      timestamps: [
-        { time: '0:00', seconds: 0, label: 'Introduction' },
-        { time: '0:45', seconds: 45, label: 'Linear Partial Derivatives' },
-        { time: '3:53', seconds: 233, label: 'Non-Linear Partial Derivatives' },
-        { time: '16:03', seconds: 963, label: 'Differential Equations' },
-        { time: '17:28', seconds: 1048, label: 'ODEs: The Harmonic Oscillator' },
-        { time: '23:32', seconds: 1412, label: 'Partial Differential Equations (PDEs)' },
-        { time: '27:39', seconds: 1659, label: 'Summary' },
-      ],
-      keyEquations: [
-        '\\frac{\\partial^2 f}{\\partial x \\partial y} = \\frac{\\partial^2 f}{\\partial y \\partial x}',
-        'df = \\left(\\frac{\\partial f}{\\partial x}\\right)_y dx + \\left(\\frac{\\partial f}{\\partial y}\\right)_x dy',
-      ],
     },
   ],
 };

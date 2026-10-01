@@ -1,0 +1,194 @@
+---
+// src/components/ChapterColophon.astro
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div class={`chapter-colophon-box not-content ${compact ? 'is-compact' : ''}`}>
+  <div class="colophon-header">
+    <div class="colophon-eyebrow">
+      <span class="pulse-dot"></span>
+      <span class="eyebrow-text">Textbook Colophon & Software Credits</span>
+    </div>
+    <a href="/about/" class="colophon-link-btn" title="View complete software stack & AI acknowledgements">
+      <span>About This Project</span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <p class="colophon-description">
+    This video textbook is developed by <strong>Professor Justin Lorieau</strong>. Video animations are mathematically typeset and rendered in <strong>Python with Manim</strong>, web platform architecture is powered by <strong>Astro & Starlight</strong>, and mathematical scripting and web development were created with assistance from <strong>Gemini 3.8 Flash</strong>.
+  </p>
+</div>
+
+<style>
+  .chapter-colophon-box {
+    margin: 3.5rem 0 2rem 0;
+    padding: 1.5rem 1.75rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(30, 41, 59, 0.45) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Vibrant subtle top accent hairline */
+  .chapter-colophon-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+  }
+
+  .colophon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .colophon-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--sl-color-gray-3);
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+    display: inline-block;
+  }
+
+  .colophon-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .colophon-link-btn:hover {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    transform: translateX(2px);
+  }
+
+  .colophon-link-btn .arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .colophon-link-btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .colophon-description {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--sl-color-gray-2);
+    margin: 0 0 0 0 !important;
+  }
+
+  .colophon-description strong {
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+
+  .colophon-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .tech-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.8rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .tech-badge:hover {
+    border-color: rgba(255, 255, 255, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .badge-icon {
+    font-size: 0.95rem;
+  }
+
+  .badge-label {
+    color: var(--sl-color-gray-3);
+    font-weight: 500;
+  }
+
+  .badge-value {
+    color: var(--sl-color-white);
+    font-weight: 600;
+  }
+
+  .site-badge:hover {
+    border-color: rgba(56, 189, 248, 0.4);
+  }
+
+  .video-badge:hover {
+    border-color: rgba(192, 132, 252, 0.4);
+  }
+
+  .ai-badge:hover {
+    border-color: rgba(251, 191, 36, 0.4);
+  }
+
+  @media (max-width: 640px) {
+    .chapter-colophon-box {
+      padding: 1.2rem;
+      margin: 2.5rem 0 1.5rem 0;
+    }
+
+    .colophon-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+
+    .colophon-badges {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .tech-badge {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  }
+</style>

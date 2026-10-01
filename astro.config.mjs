@@ -29,6 +29,7 @@ export default defineConfig({
       components: {
         TableOfContents: './src/components/starlight/TableOfContents.astro',
         MobileTableOfContents: './src/components/starlight/MobileTableOfContents.astro',
+        Footer: './src/components/starlight/Footer.astro',
       },
       sidebar: [
         {
@@ -38,6 +39,10 @@ export default defineConfig({
         {
           label: '📘 Book of Quantum Mechanics',
           slug: 'quantum-mechanics',
+        },
+        {
+          label: 'ℹ️ About & Colophon',
+          slug: 'about',
         },
       ],
     }),

@@ -1,0 +1,16 @@
+---
+// src/components/starlight/Footer.astro
+import type { Props } from '@astrojs/starlight/props';
+import Default from '@astrojs/starlight/components/Footer.astro';
+import ChapterColophon from '../ChapterColophon.astro';
+
+const slug = Astro.locals.starlightRoute?.entry?.slug ?? Astro.url.pathname.replace(/^\/|\/$/g, '');
+const isHomepage = !slug || slug === 'index';
+const isAboutPage = slug === 'about';
+
+// Display the colophon card on all content and chapter pages, excluding the landing homepage and the About page itself
+const showColophon = !isHomepage && !isAboutPage;
+---
+
+{showColophon && <ChapterColophon />}
+<Default {...Astro.props}><slot /></Default>
