@@ -13,10 +13,6 @@ const hasProblemSet = Boolean(chapter.problemSet);
 const lectureSlug = `${bookId}-ch${chapterNumber}-${chapter.id}`;
 const problemSetSlug = `${bookId}-ps${chapterNumber}-${chapter.id}`;
 
-const lectureThumb = chapter.youtubeId
-  ? `https://img.youtube.com/vi/${chapter.youtubeId}/maxresdefault.jpg`
-  : null;
-
 const psYouTubeUrl = chapter.problemSet?.youtubeId
   ? `https://youtu.be/${chapter.problemSet.youtubeId}`
   : null;
@@ -49,42 +45,49 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
         </svg>
         Main Concept Lecture
       </span>
-      <button
-        type="button"
-        class="track-btn track-lecture-btn"
-        data-track-slug={lectureSlug}
-        aria-pressed="false"
-        title="Toggle lecture watch status"
-      >
-        <span class="track-icon">○</span>
-        <span class="track-label">Mark Watched</span>
-      </button>
+      <div class="card-top-actions">
+        {chapter.youtubeId && (
+          <a
+            href={`https://youtu.be/${chapter.youtubeId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="yt-external-btn"
+            title="Open lecture on YouTube"
+          >
+            YouTube ↗
+          </a>
+        )}
+        <button
+          type="button"
+          class="track-btn track-lecture-btn"
+          data-track-slug={lectureSlug}
+          aria-pressed="false"
+          title="Toggle lecture watch status"
+        >
+          <span class="track-icon">○</span>
+          <span class="track-label">Mark Watched</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Full-width 16:9 thumbnail preview -->
+    <!-- Full-width 16:9 embedded player -->
     {chapter.youtubeId ? (
-      <a
-        href={`https://youtu.be/${chapter.youtubeId}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="video-preview-link"
-        title={`Watch "${chapter.title}" on YouTube`}
+      <div
+        class="video-embed-container"
+        id={`player-wrap-${lectureSlug}`}
+        data-video-id={chapter.youtubeId}
+        data-track-slug={lectureSlug}
       >
-        <img
-          src={lectureThumb}
-          alt={chapter.title}
+        <iframe
+          id={`yt-frame-${lectureSlug}`}
+          src={`https://www.youtube.com/embed/${chapter.youtubeId}?enablejsapi=1&rel=0&playsinline=1&modestbranding=1`}
+          title={`Lecture: ${chapter.title}`}
           loading="lazy"
-          onerror={`this.onerror=null; this.src='https://img.youtube.com/vi/${chapter.youtubeId}/hqdefault.jpg';`}
-        />
-        <div class="play-overlay">
-          <div class="play-btn-circle">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-          <span class="play-overlay-text">Watch Full Lecture on YouTube ↗</span>
-        </div>
-      </a>
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin"
+          allowfullscreen
+        ></iframe>
+      </div>
     ) : (
       <div class="video-preview-placeholder">
         <div class="placeholder-icon">🎬</div>
@@ -99,16 +102,17 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
         <div class="timestamp-section-title">⏱ Key Derivations & Timestamps</div>
         <div class="timestamp-pill-wrap">
           {chapter.timestamps.map((ts) => (
-            <a
-              href={`https://youtu.be/${chapter.youtubeId}?t=${ts.seconds}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
               class="timestamp-pill"
-              title={`Jump to ${ts.label}`}
+              data-seconds={ts.seconds}
+              data-slug={lectureSlug}
+              data-player-wrap={`player-wrap-${lectureSlug}`}
+              title={`Jump to ${ts.label} (${ts.time})`}
             >
               <span class="ts-time">{ts.time}</span>
               <span class="ts-label">{ts.label}</span>
-            </a>
+            </button>
           ))}
         </div>
       </div>
@@ -134,6 +138,20 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
         </div>
 
         <div class="ps-compact-actions">
+          {chapter.problemSet?.youtubeId && (
+            <button
+              type="button"
+              class="ps-play-embed-btn"
+              data-slug={problemSetSlug}
+              data-player-wrap={`player-wrap-${problemSetSlug}`}
+              title="Play problem set solutions embedded"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              <span class="ps-play-btn-text">Play Video</span>
+            </button>
+          )}
           {psYouTubeUrl && (
             <a
               href={psYouTubeUrl}
@@ -142,10 +160,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
               class="ps-compact-yt-btn"
               title={`Watch "${chapter.problemSet.title}" on YouTube`}
             >
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              Watch Solutions ↗
+              YouTube ↗
             </a>
           )}
           <button
@@ -160,6 +175,29 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
           </button>
         </div>
       </div>
+
+      <!-- Embedded Problem Set Player Slot -->
+      {chapter.problemSet?.youtubeId && (
+        <div
+          class="ps-embed-container"
+          id={`player-wrap-${problemSetSlug}`}
+          data-video-id={chapter.problemSet.youtubeId}
+          data-track-slug={problemSetSlug}
+          style="display: none;"
+        >
+          <div class="ps-embed-aspect">
+            <iframe
+              id={`yt-frame-${problemSetSlug}`}
+              src={`https://www.youtube.com/embed/${chapter.problemSet.youtubeId}?enablejsapi=1&rel=0&playsinline=1&modestbranding=1`}
+              title={`Problem Set: ${chapter.problemSet.title}`}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </div>
+      )}
 
       <!-- Line 2: Expandable Timestamps Section -->
       {chapter.problemSet.timestamps && chapter.problemSet.timestamps.length > 0 && (
@@ -181,16 +219,17 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
             <div class="ps-timestamps-grid">
               {chapter.problemSet.timestamps.map((ts) => (
                 chapter.problemSet?.youtubeId && ts.seconds > 0 ? (
-                  <a
-                    href={`https://youtu.be/${chapter.problemSet.youtubeId}?t=${ts.seconds}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <button
+                    type="button"
                     class="ps-ts-chip"
-                    title={`Jump to ${ts.label}`}
+                    data-seconds={ts.seconds}
+                    data-slug={problemSetSlug}
+                    data-player-wrap={`player-wrap-${problemSetSlug}`}
+                    title={`Jump to ${ts.label} (${ts.time})`}
                   >
                     <span class="ts-chip-time">{ts.time}</span>
                     <span class="ts-chip-label">{ts.label}</span>
-                  </a>
+                  </button>
                 ) : (
                   <div class="ps-ts-chip pending">
                     <span class="ts-chip-time">{ts.time}</span>
@@ -321,7 +360,33 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     border: 1px solid rgba(239, 68, 68, 0.3);
   }
 
-  /* Tracker Button */
+  /* Tracker Button & Actions */
+  .card-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .yt-external-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    text-decoration: none !important;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .yt-external-btn:hover {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-5);
+    border-color: var(--sl-color-gray-4);
+  }
+
   .track-btn {
     display: inline-flex;
     align-items: center;
@@ -348,10 +413,28 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: #10b981;
   }
 
-  /* 16:9 Full-Width Video Preview */
-  .video-preview-link {
+  @keyframes watchedCelebration {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    50% {
+      transform: scale(1.04);
+      box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+    }
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+  }
+
+  .auto-completed-pulse {
+    animation: watchedCelebration 0.8s ease-out;
+  }
+
+  /* 16:9 Full-Width Embedded Video */
+  .video-embed-container {
     position: relative;
-    display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     border-radius: 10px;
@@ -360,56 +443,15 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  .video-preview-link img {
+  .video-embed-container iframe,
+  :global(.video-embed-container iframe) {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .video-preview-link:hover img {
-    transform: scale(1.02);
-  }
-
-  .play-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    background: rgba(0, 0, 0, 0.38);
-    transition: background 0.2s ease;
-  }
-
-  .video-preview-link:hover .play-overlay {
-    background: rgba(0, 0, 0, 0.18);
-  }
-
-  .play-btn-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    background: #ef4444;
-    color: #ffffff;
-    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.55);
-    transition: transform 0.2s ease;
-  }
-
-  .video-preview-link:hover .play-btn-circle {
-    transform: scale(1.08);
-  }
-
-  .play-overlay-text {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.85);
-    letter-spacing: 0.01em;
+    border: 0;
+    display: block;
   }
 
   /* Placeholder for in-production videos */
@@ -476,12 +518,18 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: var(--sl-color-gray-2) !important;
     text-decoration: none !important;
     font-size: 0.84rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: inherit;
+    line-height: inherit;
     transition: all 0.15s ease;
   }
 
-  .timestamp-pill:hover {
+  .timestamp-pill:hover,
+  .timestamp-pill.is-active {
     background: var(--sl-color-accent);
     color: var(--sl-color-black) !important;
+    border-color: var(--sl-color-accent);
   }
 
   .ts-time {
@@ -490,7 +538,8 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: var(--sl-color-accent);
   }
 
-  .timestamp-pill:hover .ts-time {
+  .timestamp-pill:hover .ts-time,
+  .timestamp-pill.is-active .ts-time {
     color: var(--sl-color-black);
   }
 
@@ -565,7 +614,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     flex-shrink: 0;
   }
 
-  .ps-compact-yt-btn {
+  .ps-play-embed-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
@@ -575,20 +624,67 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: #0f172a !important;
     font-size: 0.78rem;
     font-weight: 700;
-    text-decoration: none !important;
+    cursor: pointer;
+    border: 1px solid #f59e0b;
     box-shadow: 0 1px 6px rgba(245, 158, 11, 0.25);
     transition: transform 0.15s ease, background 0.15s ease;
   }
 
-  .ps-compact-yt-btn:hover {
+  .ps-play-embed-btn:hover {
     background: #d97706;
     color: #ffffff !important;
     transform: translateY(-1px);
   }
 
+  .ps-compact-yt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    text-decoration: none !important;
+    border: 1px solid transparent;
+    transition: all 0.15s ease;
+  }
+
+  .ps-compact-yt-btn:hover {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-5);
+    border-color: var(--sl-color-gray-4);
+  }
+
   .track-compact-btn {
     padding: 0.25rem 0.6rem;
     font-size: 0.78rem;
+  }
+
+  .ps-embed-container {
+    margin-top: 0.85rem;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #090d16;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .ps-embed-aspect {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .ps-embed-aspect iframe,
+  :global(.ps-embed-aspect iframe) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
   }
 
   /* Line 2: Expandable Timestamps */
@@ -672,10 +768,14 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: var(--sl-color-gray-2) !important;
     text-decoration: none !important;
     font-size: 0.82rem;
+    cursor: pointer;
+    font-family: inherit;
+    line-height: inherit;
     transition: all 0.15s ease;
   }
 
-  .ps-ts-chip:hover {
+  .ps-ts-chip:hover,
+  .ps-ts-chip.is-active {
     background: #f59e0b !important;
     color: #0f172a !important;
     border-color: #f59e0b !important;
@@ -687,7 +787,8 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     color: #fbbf24;
   }
 
-  .ps-ts-chip:hover .ts-chip-time {
+  .ps-ts-chip:hover .ts-chip-time,
+  .ps-ts-chip.is-active .ts-chip-time {
     color: #0f172a;
   }
 
@@ -699,11 +800,281 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     opacity: 0.6;
     cursor: default;
   }
+
+  .yt-error-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.95);
+    color: var(--sl-color-gray-2);
+    padding: 1.5rem;
+    text-align: center;
+    z-index: 5;
+    border-radius: 10px;
+    gap: 0.75rem;
+  }
+
+  .yt-error-fallback p {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #fca5a5;
+  }
+
+  .yt-error-fallback-sub {
+    font-size: 0.8rem;
+    color: var(--sl-color-gray-3);
+    max-width: 440px;
+    line-height: 1.45;
+  }
+
+  .yt-error-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: 6px;
+    background: #ef4444;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none !important;
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+    transition: background 0.15s ease;
+  }
+
+  .yt-error-btn:hover {
+    background: #dc2626;
+  }
 </style>
 
 <script>
+  // Global YouTube IFrame API promise
+  let ytApiPromise: Promise<any> | null = null;
+  function getYouTubeAPI(): Promise<any> {
+    if ((window as any).YT && (window as any).YT.Player) {
+      return Promise.resolve((window as any).YT);
+    }
+    if (ytApiPromise) return ytApiPromise;
+
+    ytApiPromise = new Promise((resolve) => {
+      const checkInterval = setInterval(() => {
+        if ((window as any).YT && (window as any).YT.Player) {
+          clearInterval(checkInterval);
+          resolve((window as any).YT);
+        }
+      }, 50);
+
+      const prevOnReady = (window as any).onYouTubeIframeAPIReady;
+      (window as any).onYouTubeIframeAPIReady = () => {
+        if (prevOnReady) prevOnReady();
+        clearInterval(checkInterval);
+        resolve((window as any).YT);
+      };
+
+      if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+        const tag = document.createElement('script');
+        tag.src = 'https://www.youtube.com/iframe_api';
+        tag.async = true;
+        document.head.appendChild(tag);
+      }
+    });
+    return ytApiPromise;
+  }
+
+  // Active player instances, timers, and pending seeks
+  const activePlayers = new Map<string, any>();
+  const activeTimers = new Map<string, any>();
+  const pendingSeeks = new Map<string, number>();
+
+  function markAsCompleted(slug: string) {
+    const storageKey = `qp_watched_${slug}`;
+    if (localStorage.getItem(storageKey) === 'true') {
+      return;
+    }
+    localStorage.setItem(storageKey, 'true');
+
+    const btn = document.querySelector<HTMLButtonElement>(`.track-btn[data-track-slug="${slug}"]`);
+    const card = btn?.closest('.video-card, .companion-problemset-compact');
+    const textSpan = btn?.querySelector('.track-label');
+    const iconSpan = btn?.querySelector('.track-icon');
+    const isPs = btn?.classList.contains('track-ps-btn');
+
+    card?.classList.add('is-watched');
+    btn?.classList.add('completed');
+    btn?.setAttribute('aria-pressed', 'true');
+    if (textSpan) textSpan.textContent = isPs ? 'Solved ✓' : 'Watched ✓';
+    if (iconSpan) iconSpan.textContent = '●';
+
+    btn?.classList.add('auto-completed-pulse');
+    setTimeout(() => btn?.classList.remove('auto-completed-pulse'), 1500);
+
+    window.dispatchEvent(
+      new CustomEvent('qp:progress-update', {
+        detail: { slug, isCompleted: true },
+      })
+    );
+  }
+
+  function handlePlayerStateChange(event: any, slug: string, player: any) {
+    const YT = (window as any).YT;
+    if (!YT) return;
+
+    if (activeTimers.has(slug)) {
+      clearInterval(activeTimers.get(slug));
+      activeTimers.delete(slug);
+    }
+
+    // 1 = PLAYING
+    if (event.data === YT.PlayerState.PLAYING) {
+      const timer = setInterval(() => {
+        try {
+          if (!player || typeof player.getPlayerState !== 'function') {
+            clearInterval(timer);
+            return;
+          }
+          if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+            clearInterval(timer);
+            activeTimers.delete(slug);
+            return;
+          }
+          const current = player.getCurrentTime();
+          const duration = player.getDuration();
+          // Auto-mark watched when reaching 90% or within last 10 seconds of the video
+          if (duration > 0 && (current / duration >= 0.90 || duration - current <= 10)) {
+            markAsCompleted(slug);
+            clearInterval(timer);
+            activeTimers.delete(slug);
+          }
+        } catch {
+          clearInterval(timer);
+        }
+      }, 1500);
+      activeTimers.set(slug, timer);
+    } else if (event.data === YT.PlayerState.ENDED) {
+      markAsCompleted(slug);
+    }
+  }
+
+  function handlePlayerError(code: number, wrapElement: HTMLElement, videoId: string) {
+    if (wrapElement.querySelector('.yt-error-fallback')) return;
+
+    const notice = document.createElement('div');
+    notice.className = 'yt-error-fallback';
+    notice.innerHTML = `
+      <p>⚠️ Embedded Playback Restricted (Error ${code})</p>
+      <div class="yt-error-fallback-sub">
+        YouTube restricts embedding in local preview (HTTP) or when an ad-blocker blocks player verification.
+      </div>
+      <a href="https://youtu.be/${videoId}" target="_blank" rel="noopener noreferrer" class="yt-error-btn">
+        Watch on YouTube ↗
+      </a>
+    `;
+    wrapElement.appendChild(notice);
+  }
+
+  function ensurePlayer(slug: string, startSeconds = 0): Promise<any> {
+    if (activePlayers.has(slug)) {
+      const player = activePlayers.get(slug);
+      try {
+        if (startSeconds > 0 && typeof player.seekTo === 'function') {
+          player.seekTo(startSeconds, true);
+        }
+        if (typeof player.playVideo === 'function') {
+          player.playVideo();
+        }
+      } catch (err) {
+        console.warn('Error commanding player:', err);
+      }
+      return Promise.resolve(player);
+    }
+
+    if (startSeconds > 0) {
+      pendingSeeks.set(slug, startSeconds);
+    }
+
+    return getYouTubeAPI().then((YT) => {
+      const iframe = document.getElementById(`yt-frame-${slug}`) as HTMLIFrameElement;
+      if (!iframe) return null;
+
+      const wrapElement = iframe.closest('.video-embed-container, .ps-embed-container') as HTMLElement;
+      const videoId = wrapElement?.getAttribute('data-video-id') || '';
+
+      return new Promise((resolve) => {
+        const player = new YT.Player(iframe.id, {
+          events: {
+            onReady: (event: any) => {
+              const sec = pendingSeeks.get(slug);
+              if (typeof sec === 'number' && sec > 0) {
+                pendingSeeks.delete(slug);
+                event.target.seekTo(sec, true);
+                event.target.playVideo();
+              }
+              resolve(player);
+            },
+            onStateChange: (event: any) => {
+              handlePlayerStateChange(event, slug, player);
+            },
+            onError: (event: any) => {
+              console.warn(`[YouTube Player Error] Code: ${event.data} on ${slug}`);
+              if (wrapElement && videoId) {
+                handlePlayerError(event.data, wrapElement, videoId);
+              }
+              resolve(player);
+            },
+          },
+        });
+        activePlayers.set(slug, player);
+      });
+    });
+  }
+
+  function initVisiblePlayers() {
+    getYouTubeAPI().then((YT) => {
+      const iframes = document.querySelectorAll<HTMLIFrameElement>('iframe[id^="yt-frame-"]');
+      iframes.forEach((iframe) => {
+        const slug = iframe.id.replace('yt-frame-', '');
+        if (activePlayers.has(slug)) return;
+
+        // Skip hidden problem set iframes until they are opened
+        const isHidden = iframe.closest('.ps-embed-container')?.getAttribute('style')?.includes('none');
+        if (isHidden) return;
+
+        const wrapElement = iframe.closest('.video-embed-container, .ps-embed-container') as HTMLElement;
+        const videoId = wrapElement?.getAttribute('data-video-id') || '';
+
+        const player = new YT.Player(iframe.id, {
+          events: {
+            onReady: (event: any) => {
+              const sec = pendingSeeks.get(slug);
+              if (typeof sec === 'number' && sec > 0) {
+                pendingSeeks.delete(slug);
+                event.target.seekTo(sec, true);
+                event.target.playVideo();
+              }
+            },
+            onStateChange: (event: any) => {
+              handlePlayerStateChange(event, slug, player);
+            },
+            onError: (event: any) => {
+              console.warn(`[YouTube Player Error] Code: ${event.data} on ${slug}`);
+              if (wrapElement && videoId) {
+                handlePlayerError(event.data, wrapElement, videoId);
+              }
+            },
+          },
+        });
+        activePlayers.set(slug, player);
+      });
+    });
+  }
+
   function setupChapterRowTrackers() {
-    const buttons = document.querySelectorAll('.track-btn');
+    // 1. Setup manual toggle tracking buttons
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.track-btn');
     buttons.forEach((btn) => {
       const slug = btn.getAttribute('data-track-slug');
       if (!slug) return;
@@ -712,7 +1083,6 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
       const textSpan = btn.querySelector('.track-label');
       const iconSpan = btn.querySelector('.track-icon');
       const isPs = btn.classList.contains('track-ps-btn');
-
       const storageKey = `qp_watched_${slug}`;
 
       function updateUI(completed: boolean) {
@@ -731,27 +1101,107 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
         }
       }
 
-      // Initial read
-      const isCompleted = localStorage.getItem(storageKey) === 'true';
-      updateUI(isCompleted);
+      updateUI(localStorage.getItem(storageKey) === 'true');
 
-      // Click toggle
+      if (!btn.hasAttribute('data-bound')) {
+        btn.setAttribute('data-bound', 'true');
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const current = localStorage.getItem(storageKey) === 'true';
+          const next = !current;
+          localStorage.setItem(storageKey, next ? 'true' : 'false');
+          updateUI(next);
+
+          window.dispatchEvent(
+            new CustomEvent('qp:progress-update', {
+              detail: { slug, isCompleted: next },
+            })
+          );
+        });
+      }
+    });
+
+    // 2. Setup problem set play / toggle buttons
+    document.querySelectorAll<HTMLElement>('.ps-play-embed-btn').forEach((btn) => {
+      if (btn.hasAttribute('data-bound')) return;
+      btn.setAttribute('data-bound', 'true');
+
       btn.addEventListener('click', (e) => {
         e.preventDefault();
-        const current = localStorage.getItem(storageKey) === 'true';
-        const next = !current;
-        localStorage.setItem(storageKey, next ? 'true' : 'false');
-        updateUI(next);
+        const slug = btn.getAttribute('data-slug') || btn.getAttribute('data-player-wrap')?.replace('player-wrap-', '');
+        if (!slug) return;
 
-        window.dispatchEvent(
-          new CustomEvent('qp:progress-update', {
-            detail: { slug, isCompleted: next },
-          })
-        );
+        const wrap = document.getElementById(`player-wrap-${slug}`);
+        if (!wrap) return;
+
+        const isCurrentlyHidden = wrap.style.display === 'none';
+        const labelSpan = btn.querySelector('.ps-play-btn-text');
+
+        if (isCurrentlyHidden) {
+          wrap.style.display = 'block';
+          if (labelSpan) labelSpan.textContent = 'Hide Video';
+          ensurePlayer(slug, 0);
+          wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          const player = activePlayers.get(slug);
+          if (player && typeof player.pauseVideo === 'function') {
+            player.pauseVideo();
+          }
+          wrap.style.display = 'none';
+          if (labelSpan) labelSpan.textContent = 'Play Video';
+        }
       });
     });
+
+    // 3. Setup timestamp pills & problem set chips
+    document.querySelectorAll<HTMLElement>('.timestamp-pill, .ps-ts-chip').forEach((chip) => {
+      if (chip.hasAttribute('data-bound')) return;
+      chip.setAttribute('data-bound', 'true');
+
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const slug = chip.getAttribute('data-slug') || chip.getAttribute('data-player-wrap')?.replace('player-wrap-', '');
+        const seconds = parseInt(chip.getAttribute('data-seconds') || '0', 10);
+        if (!slug) return;
+
+        const wrap = document.getElementById(`player-wrap-${slug}`);
+        if (wrap && wrap.classList.contains('ps-embed-container') && wrap.style.display === 'none') {
+          wrap.style.display = 'block';
+          const parentComp = wrap.closest('.companion-problemset-compact');
+          const psPlayBtn = parentComp?.querySelector('.ps-play-embed-btn .ps-play-btn-text');
+          if (psPlayBtn) psPlayBtn.textContent = 'Hide Video';
+        }
+
+        const parentDetails = chip.closest('details');
+        if (parentDetails && !parentDetails.open) {
+          parentDetails.open = true;
+        }
+
+        ensurePlayer(slug, seconds);
+
+        const siblingChips = chip.parentElement?.querySelectorAll('.timestamp-pill, .ps-ts-chip');
+        siblingChips?.forEach((c) => c.classList.remove('is-active'));
+        chip.classList.add('is-active');
+
+        if (wrap) {
+          const rect = wrap.getBoundingClientRect();
+          if (rect.top < 80 || rect.bottom > window.innerHeight) {
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    });
+
+    // 4. Initialize visible lecture players for watch monitoring
+    initVisiblePlayers();
   }
 
   setupChapterRowTrackers();
-  document.addEventListener('astro:page-load', setupChapterRowTrackers);
+  document.addEventListener('astro:page-load', () => {
+    activeTimers.forEach((timer) => clearInterval(timer));
+    activeTimers.clear();
+    activePlayers.clear();
+    pendingSeeks.clear();
+    setupChapterRowTrackers();
+  });
 </script>

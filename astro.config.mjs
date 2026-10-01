@@ -19,6 +19,15 @@ export default defineConfig({
         'katex/dist/katex.min.css',
         './src/styles/custom.css',
       ],
+      head: [
+        {
+          tag: 'meta',
+          attrs: {
+            name: 'referrer',
+            content: 'strict-origin-when-cross-origin',
+          },
+        },
+      ],
       social: [
         {
           icon: 'youtube',
