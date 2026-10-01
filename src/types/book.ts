@@ -26,6 +26,7 @@ export interface ChapterData {
   id: string;
   title: string;
   shortTitle?: string;
+  part?: string; // Optional part / section grouping
   duration?: string;
   youtubeId: string;
   summary: string;
@@ -38,6 +39,7 @@ export interface BookData {
   id: string;
   volume: string;
   title: string;
+  overviewTitle?: string; // Custom title for TOC overview item (default: 'Overview')
   tagline: string;
   description: string;
   coverImage?: string; // Path to 3:4 letter sheet cover thumbnail

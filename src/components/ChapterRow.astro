@@ -19,7 +19,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
 ---
 
 <section
-  class={`chapter-row-wrapper ${hasProblemSet ? 'has-ps' : 'solo-lecture'}`}
+  class={`chapter-row-wrapper not-content ${hasProblemSet ? 'has-ps' : 'solo-lecture'}`}
   data-chapter-id={chapter.id}
   data-chapter-number={chapterNumber}
 >
@@ -99,7 +99,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     <!-- Timestamps below the video -->
     {chapter.timestamps && chapter.timestamps.length > 0 && (
       <div class="chapter-derivation-timestamps">
-        <div class="timestamp-section-title">⏱ Key Derivations & Timestamps</div>
+        <div class="timestamp-section-title">Sections</div>
         <div class="timestamp-pill-wrap">
           {chapter.timestamps.map((ts) => (
             <button
@@ -505,6 +505,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   .timestamp-pill-wrap {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
   }
 
@@ -513,6 +514,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     align-items: center;
     gap: 0.55rem;
     padding: 0.35rem 0.7rem;
+    margin: 0 !important;
     border-radius: 6px;
     background: var(--sl-color-gray-5);
     color: var(--sl-color-gray-2) !important;
@@ -521,7 +523,8 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     cursor: pointer;
     border: 1px solid transparent;
     font-family: inherit;
-    line-height: inherit;
+    line-height: 1.2;
+    box-sizing: border-box;
     transition: all 0.15s ease;
   }
 
@@ -533,8 +536,11 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   }
 
   .ts-time {
+    display: inline-flex;
+    align-items: center;
     font-family: var(--sl-font-mono);
     font-weight: 700;
+    line-height: 1;
     color: var(--sl-color-accent);
   }
 
@@ -544,6 +550,9 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   }
 
   .ts-label {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
     white-space: nowrap;
   }
 
@@ -754,6 +763,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   .ps-timestamps-grid {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.4rem;
   }
 
@@ -762,6 +772,7 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     align-items: center;
     gap: 0.5rem;
     padding: 0.3rem 0.65rem;
+    margin: 0 !important;
     border-radius: 6px;
     background: rgba(245, 158, 11, 0.08);
     border: 1px solid rgba(245, 158, 11, 0.2);
@@ -770,7 +781,8 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
     font-size: 0.82rem;
     cursor: pointer;
     font-family: inherit;
-    line-height: inherit;
+    line-height: 1.2;
+    box-sizing: border-box;
     transition: all 0.15s ease;
   }
 
@@ -782,8 +794,11 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   }
 
   .ts-chip-time {
+    display: inline-flex;
+    align-items: center;
     font-family: var(--sl-font-mono);
     font-weight: 700;
+    line-height: 1;
     color: #fbbf24;
   }
 
@@ -793,6 +808,9 @@ const psYouTubeUrl = chapter.problemSet?.youtubeId
   }
 
   .ts-chip-label {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1.2;
     white-space: nowrap;
   }
 

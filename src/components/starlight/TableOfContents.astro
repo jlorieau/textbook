@@ -13,15 +13,66 @@ if (slug === 'thermodynamics') {
   book = quantumMechanicsBook;
 }
 
-const items = book
-  ? [
-      { slug: '_top', text: Astro.locals.t('tableOfContents.overview') || 'Overview' },
-      ...book.chapters.map((ch, idx) => ({
+export interface CustomTocItem {
+  slug: string;
+  text: string;
+  isPart?: boolean;
+  children?: CustomTocItem[];
+}
+
+let items: CustomTocItem[] = [];
+
+if (book) {
+  const overviewText = book.overviewTitle || Astro.locals.t('tableOfContents.overview') || 'Overview';
+  items.push({ slug: '_top', text: overviewText });
+
+  const hasAnyPart = book.chapters.some((ch) => Boolean(ch.part));
+
+  if (hasAnyPart) {
+    let currentPart: string | null = null;
+    let currentPartItem: CustomTocItem | null = null;
+
+    book.chapters.forEach((ch, idx) => {
+      const chItem: CustomTocItem = {
         slug: `ch-${idx + 1}`,
         text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
-      })),
-    ]
-  : (toc?.items ?? []);
+      };
+
+      if (ch.part) {
+        if (ch.part !== currentPart) {
+          currentPart = ch.part;
+          const partSlug = 'part-' + ch.part.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+          currentPartItem = {
+            slug: partSlug,
+            text: ch.part,
+            isPart: true,
+            children: [chItem],
+          };
+          items.push(currentPartItem);
+        } else if (currentPartItem) {
+          currentPartItem.children!.push(chItem);
+        }
+      } else {
+        currentPart = null;
+        currentPartItem = null;
+        items.push(chItem);
+      }
+    });
+  } else {
+    book.chapters.forEach((ch, idx) => {
+      items.push({
+        slug: `ch-${idx + 1}`,
+        text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
+      });
+    });
+  }
+} else {
+  items = (toc?.items ?? []).map((i) => ({
+    slug: i.slug,
+    text: i.text,
+    children: i.children?.map((c) => ({ slug: c.slug, text: c.text })),
+  }));
+}
 ---
 
 {
@@ -31,10 +82,21 @@ const items = book
         <h2 id="starlight__on-this-page">{Astro.locals.t('tableOfContents.onThisPage')}</h2>
         <ul class="custom-toc-list">
           {items.map((item) => (
-            <li>
-              <a href={'#' + item.slug}>
+            <li class={item.isPart ? 'toc-part-item' : ''}>
+              <a href={'#' + item.slug} class={item.isPart ? 'toc-part-link' : ''}>
                 <span>{item.text}</span>
               </a>
+              {item.children && item.children.length > 0 && (
+                <ul class="custom-toc-sublist">
+                  {item.children.map((sub) => (
+                    <li>
+                      <a href={'#' + sub.slug}>
+                        <span>{sub.text}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -160,8 +222,30 @@ const items = book
   ul.custom-toc-list a:hover {
     color: var(--sl-color-white);
   }
+  ul.custom-toc-list a.toc-part-link {
+    font-weight: 700;
+    color: var(--sl-color-gray-2);
+    font-size: 0.78rem;
+    margin-top: 0.65rem;
+    padding-block: 0.25rem;
+    letter-spacing: 0.01em;
+  }
+  ul.custom-toc-list a.toc-part-link:hover {
+    color: var(--sl-color-white);
+  }
   ul.custom-toc-list a[aria-current='true'] {
     color: var(--sl-color-text-accent) !important;
     font-weight: 600;
+  }
+  ul.custom-toc-sublist {
+    padding-inline-start: 0.65rem;
+    list-style: none;
+    margin: 0.1rem 0 0.4rem 0.5rem;
+    border-inline-start: 1px solid var(--sl-color-gray-5);
+  }
+  ul.custom-toc-sublist a {
+    padding-inline-start: 0.5rem;
+    font-size: 0.74rem;
+    color: var(--sl-color-gray-3);
   }
 </style>

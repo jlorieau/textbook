@@ -4,6 +4,7 @@ export const thermodynamicsBook: BookData = {
   id: 'thermo',
   volume: 'Volume I',
   title: 'Book of Thermodynamics',
+  overviewTitle: 'Overview',
   tagline: 'Energy transformations, state functions, enthalpy, and entropy.',
   description:
     'Ideal Gas Law, Enthalpy, Internal Energy, Entropy, Gibbs Free Energy, Equilibria',
@@ -14,6 +15,7 @@ export const thermodynamicsBook: BookData = {
       id: 'calculus',
       title: "Why You Can't Master Science Without Calculus",
       shortTitle: 'Calculus Foundations',
+      part: 'Background',
       duration: '26:15',
       youtubeId: '-UWaZOkkPZ4',
       summary:
@@ -39,6 +41,7 @@ export const thermodynamicsBook: BookData = {
       id: 'multivariate-derivatives',
       title: 'Partial Derivatives and How Nature is Built on Them',
       shortTitle: 'Multivariate Derivatives',
+      part: 'Background',
       duration: '28:15',
       youtubeId: 'mCXxHQDrFnA',
       summary:
@@ -61,6 +64,7 @@ export const thermodynamicsBook: BookData = {
       id: 'path-and-state',
       title: 'Why Thermodynamics Needs Both State and Path Functions',
       shortTitle: 'Path vs. State Variables',
+      part: 'Enthalpy, Internal Energy, Heat and Work',
       duration: '13:15',
       youtubeId: 'pbb-6FsBTZE',
       summary:
@@ -88,6 +92,7 @@ export const thermodynamicsBook: BookData = {
       id: 'internal-energy-enthalpy',
       title: 'Why Thermodynamics Needs Both Internal Energy and Enthalpy',
       shortTitle: 'Internal Energy & Enthalpy',
+      part: 'Enthalpy, Internal Energy, Heat and Work',
       duration: '18:50',
       youtubeId: '-AJLtPOtxbQ',
       summary:

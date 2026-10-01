@@ -23,7 +23,7 @@ const totalLectures = book.chapters.length;
 const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).length;
 ---
 
-<div class={`book-stream-container book-theme-${book.colorScheme}`} data-book-id={book.id}>
+<div class={`book-stream-container not-content book-theme-${book.colorScheme}`} data-book-id={book.id}>
   <!-- Book Hero Banner -->
   <header class="book-hero-banner not-content">
     <div class="book-hero-layout">
@@ -43,7 +43,6 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
       <div class="book-hero-content">
         <div class="book-hero-meta">
           <h1 class="book-main-title">{book.title}</h1>
-          <p class="book-tagline-text">{book.tagline}</p>
           <p class="book-desc-text">{book.description}</p>
         </div>
 
@@ -55,10 +54,6 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
           <div class="stat-pill">
             <span class="stat-val">{totalProblemSets}</span>
             <span class="stat-lbl">Problem Sets</span>
-          </div>
-          <div class="stat-pill">
-            <span class="stat-val">HD / 4K</span>
-            <span class="stat-lbl">Manim Visuals</span>
           </div>
         </div>
       </div>
@@ -79,28 +74,26 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     </div>
   </div>
 
-  <!-- Sticky In-Page Chapter Navigator -->
-  <nav class="sticky-chapter-nav" aria-label="Book Chapters Navigator">
-    <div class="nav-title">Jump to Chapter:</div>
-    <div class="nav-pills-list">
-      {book.chapters.map((ch, idx) => (
-        <a href={`#ch-${idx + 1}`} class="nav-pill-item">
-          <span class="nav-num">Ch {idx + 1}</span>
-          <span class="nav-name">{ch.shortTitle || ch.title}</span>
-        </a>
-      ))}
-    </div>
-  </nav>
-
   <!-- Sequential Video Chapters -->
   <div class="sequential-chapters-list">
-    {book.chapters.map((chapter, idx) => (
-      <ChapterRow
-        chapter={chapter}
-        chapterNumber={idx + 1}
-        bookId={book.id}
-      />
-    ))}
+    {book.chapters.map((chapter, idx) => {
+      const showPartHeading = chapter.part && (idx === 0 || book.chapters[idx - 1].part !== chapter.part);
+      const partSlug = chapter.part ? 'part-' + chapter.part.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : null;
+      return (
+        <Fragment key={chapter.id}>
+          {showPartHeading && (
+            <div class="book-part-divider">
+              <h2 class="part-divider-title" id={partSlug}>{chapter.part}</h2>
+            </div>
+          )}
+          <ChapterRow
+            chapter={chapter}
+            chapterNumber={idx + 1}
+            bookId={book.id}
+          />
+        </Fragment>
+      );
+    })}
   </div>
 
   <!-- Main YouTube Channel Spotlight -->
@@ -111,6 +104,23 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
   .book-stream-container {
     width: 100%;
     margin-top: 1rem;
+  }
+
+  /* Section / Part Dividers */
+  .book-part-divider {
+    margin: 4.5rem 0 1.5rem 0;
+    padding-top: 1.75rem;
+    border-top: 2px solid var(--sl-color-gray-5);
+    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+  }
+
+  .part-divider-title {
+    margin: 0 !important;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--sl-color-white);
+    letter-spacing: -0.02em;
+    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
   }
 
   /* Book Hero */
@@ -189,13 +199,6 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--sl-color-white);
-  }
-
-  .book-tagline-text {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--sl-color-accent);
-    margin: 0 0 0.75rem 0 !important;
   }
 
   .book-desc-text {
@@ -288,74 +291,6 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     font-size: 0.8rem;
     color: var(--sl-color-gray-3);
     margin-top: 0.4rem;
-  }
-
-  /* Sticky In-Page Navigator */
-  .sticky-chapter-nav {
-    position: sticky;
-    top: 4.5rem;
-    z-index: 20;
-    margin: 1.5rem 0 2.5rem 0;
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-    background: rgba(15, 23, 42, 0.88);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid var(--sl-color-gray-5);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    overflow-x: auto;
-  }
-
-  .nav-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--sl-color-gray-3);
-    flex-shrink: 0;
-  }
-
-  .nav-pills-list {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 2px;
-  }
-
-  .nav-pill-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 6px;
-    background: var(--sl-color-gray-6);
-    border: 1px solid var(--sl-color-gray-5);
-    color: var(--sl-color-gray-2) !important;
-    text-decoration: none !important;
-    font-size: 0.82rem;
-    font-weight: 600;
-    white-space: nowrap;
-    transition: all 0.15s ease;
-  }
-
-  .nav-pill-item:hover {
-    background: var(--sl-color-accent);
-    color: var(--sl-color-black) !important;
-    border-color: var(--sl-color-accent);
-  }
-
-  .nav-num {
-    font-weight: 700;
-    color: var(--sl-color-accent);
-  }
-
-  .nav-pill-item:hover .nav-num {
-    color: var(--sl-color-black);
   }
 </style>
 

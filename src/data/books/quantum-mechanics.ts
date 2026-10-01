@@ -4,6 +4,7 @@ export const quantumMechanicsBook: BookData = {
   id: 'qm',
   volume: 'Volume II',
   title: 'Book of Quantum Mechanics',
+  overviewTitle: 'Overview',
   tagline: 'Mathematical foundations, complex analysis, and wave mechanics.',
   description:
     'Wave-Particle Duality, Schrodinger Equation, Hydrogen Atom, Electronic Hamiltonian, Spectroscopy',
@@ -14,6 +15,7 @@ export const quantumMechanicsBook: BookData = {
       id: 'functions',
       title: "What Most Don't Get About Functions",
       shortTitle: 'Functions & Validity Domains',
+      part: 'Mathematical foundations, complex analysis, and wave mechanics',
       duration: '11:42',
       youtubeId: 'KCFKsyrFnnw',
       summary:
@@ -53,6 +55,7 @@ export const quantumMechanicsBook: BookData = {
       id: 'calculus',
       title: "Why You Can't Master Science Without Calculus",
       shortTitle: 'Calculus Foundations',
+      part: 'Mathematical foundations, complex analysis, and wave mechanics',
       duration: '26:15',
       youtubeId: '-UWaZOkkPZ4',
       summary:
@@ -78,6 +81,7 @@ export const quantumMechanicsBook: BookData = {
       id: 'multivariate-derivatives',
       title: 'Partial Derivatives and How Nature is Built on Them',
       shortTitle: 'Multivariate Derivatives',
+      part: 'Mathematical foundations, complex analysis, and wave mechanics',
       duration: '28:15',
       youtubeId: 'mCXxHQDrFnA',
       summary:
@@ -100,6 +104,7 @@ export const quantumMechanicsBook: BookData = {
       id: 'coordinate-systems',
       title: 'Why Cartesian Makes Math Harder Than It Needs to Be',
       shortTitle: 'Curvilinear Coordinate Systems',
+      part: 'Mathematical foundations, complex analysis, and wave mechanics',
       duration: '20:45',
       youtubeId: 'szI2Ioh9w20',
       summary:
@@ -120,6 +125,7 @@ export const quantumMechanicsBook: BookData = {
       id: 'complex-numbers',
       title: "Why You Can't Master Physics Without Complex Numbers",
       shortTitle: 'Complex Numbers & Phase',
+      part: 'Mathematical foundations, complex analysis, and wave mechanics',
       duration: '09:15',
       youtubeId: 'jvFLJieOgLg',
       summary:
