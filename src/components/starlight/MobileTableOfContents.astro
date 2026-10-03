@@ -75,6 +75,10 @@ if (book) {
       slug: 'bibliography-reading',
       text: book.referencesTitle || '📚 Bibliography & Reading',
       isPart: true,
+      children: book.references.map((cat) => ({
+        slug: 'ref-' + cat.category.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+        text: cat.category,
+      })),
     });
   }
 } else {

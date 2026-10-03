@@ -27,7 +27,10 @@ function formatCitation(text: string): string {
       const catSlug = 'ref-' + cat.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       return (
         <div class="reference-category-block">
-          <h3 class="category-title" id={catSlug}>{cat.category}</h3>
+          <div class="chapter-row-header">
+            <h2 class="chapter-title-text" id={catSlug}>{cat.category}</h2>
+            <span class="chapter-time-pill">📚 {cat.items.length} {cat.items.length === 1 ? 'Volume' : 'Volumes'}</span>
+          </div>
 
           <ol class="citation-clean-list">
             {cat.items.map((item, idx) => (
@@ -73,13 +76,34 @@ function formatCitation(text: string): string {
     padding-left: 0.15rem;
   }
 
-  .category-title {
-    margin: 0.25rem 0 0.65rem 0 !important;
-    font-size: 1.2rem !important;
+  /* Chapter-level header row matching ChapterRow.astro */
+  .chapter-row-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--sl-color-gray-5);
+    padding-bottom: 0.75rem;
+  }
+
+  .chapter-title-text {
+    margin: 0 !important;
+    font-size: 1.35rem !important;
     font-weight: 700 !important;
     color: var(--sl-color-white) !important;
-    letter-spacing: -0.01em;
-    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+    letter-spacing: -0.01em !important;
+    scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem);
+  }
+
+  .chapter-time-pill {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--sl-color-gray-3);
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: var(--sl-color-gray-5);
   }
 
   /* Clean citation list without bounding boxes and compact spacing */
@@ -129,6 +153,19 @@ function formatCitation(text: string): string {
   }
 
   /* Light theme styles */
+  :global(:root[data-theme='light']) .chapter-title-text {
+    color: #0f172a !important;
+  }
+
+  :global(:root[data-theme='light']) .chapter-time-pill {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  :global(:root[data-theme='light']) .chapter-row-header {
+    border-bottom-color: #e2e8f0;
+  }
+
   :global(:root[data-theme='light']) .citation-text {
     color: #334155;
   }
