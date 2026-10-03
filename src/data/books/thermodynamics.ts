@@ -4,7 +4,6 @@ export const thermodynamicsBook: BookData = {
   id: 'thermo',
   volume: 'Volume I',
   title: 'Book of Thermodynamics',
-  overviewTitle: 'Overview',
   tagline: 'Energy transformations, state functions, enthalpy, and entropy.',
   description:
     'Ideal Gas Law, Enthalpy, Internal Energy, Entropy, Gibbs Free Energy, Equilibria',
@@ -15,7 +14,7 @@ export const thermodynamicsBook: BookData = {
       id: 'calculus',
       title: "Why You Can't Master Science Without Calculus",
       shortTitle: 'Calculus Foundations',
-      part: 'Background',
+      part: '📐 Background',
       duration: '26:15',
       youtubeId: '-UWaZOkkPZ4',
       summary:
@@ -39,7 +38,7 @@ export const thermodynamicsBook: BookData = {
       id: 'multivariate-derivatives',
       title: 'Partial Derivatives and How Nature is Built on Them',
       shortTitle: 'Multivariate Derivatives',
-      part: 'Background',
+      part: '📐 Background',
       duration: '28:15',
       youtubeId: 'mCXxHQDrFnA',
       summary:
@@ -62,7 +61,7 @@ export const thermodynamicsBook: BookData = {
       id: 'path-and-state',
       title: 'Why Thermodynamics Needs Both State and Path Functions',
       shortTitle: 'Path vs. State Variables',
-      part: 'Enthalpy, Internal Energy, Heat and Work',
+      part: '🌡️ Enthalpy, Internal Energy, Heat and Work',
       duration: '13:15',
       youtubeId: 'pbb-6FsBTZE',
       summary:
@@ -88,7 +87,7 @@ export const thermodynamicsBook: BookData = {
       id: 'internal-energy-enthalpy',
       title: 'Why Thermodynamics Needs Both Internal Energy and Enthalpy',
       shortTitle: 'Internal Energy & Enthalpy',
-      part: 'Enthalpy, Internal Energy, Heat and Work',
+      part: '🌡️ Enthalpy, Internal Energy, Heat and Work',
       duration: '18:50',
       youtubeId: '-AJLtPOtxbQ',
       summary:
@@ -107,6 +106,19 @@ export const thermodynamicsBook: BookData = {
         'H = U + PV',
         'dH = dU + P\\,dV + V\\,dP = \\delta q_p',
         'C_p - C_v = R',
+      ],
+    },
+  ],
+  referencesTitle: '📚 Bibliography & Reading',
+  references: [
+    {
+      category: 'Books',
+      items: [
+        'Atkins, Peter, and Julio de Paula. *Physical Chemistry*, 9th Edition. W. H. Freeman, 2010.',
+        'Engel, T., G. Drobny, and P. Reid. *Physical Chemistry for the Life Sciences*. Pearson-Prentice-Hall, 2007.',
+        'McQuarrie, Donald A., and John D. Simon. *Physical Chemistry: A Molecular Approach*. University Science Books, 1997.',
+        'Schroeder, Daniel V. *An Introduction to Thermal Physics*. Internat. ed. Addison Wesley, 2000.',
+        'Silbey, Robert J., Robert A. Alberty, George A. Papadantonakis, and Moungi G. Bawendi. *Physical Chemistry*. Wiley, 2021.',
       ],
     },
   ],

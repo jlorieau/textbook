@@ -24,10 +24,12 @@ export interface CustomTocItem {
 let items: CustomTocItem[] = [];
 
 if (book) {
-  const overviewText = book.overviewTitle || Astro.locals.t('tableOfContents.overview') || 'Overview';
-  items.push({ slug: '_top', text: overviewText });
-
   const hasAnyPart = book.chapters.some((ch) => Boolean(ch.part));
+
+  if (!hasAnyPart && book.overviewTitle !== false) {
+    const overviewText = book.overviewTitle || Astro.locals.t('tableOfContents.overview') || 'Overview';
+    items.push({ slug: '_top', text: overviewText });
+  }
 
   if (hasAnyPart) {
     let currentPart: string | null = null;
@@ -65,6 +67,14 @@ if (book) {
         slug: `ch-${idx + 1}`,
         text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
       });
+    });
+  }
+
+  if (book.references && book.references.length > 0) {
+    items.push({
+      slug: 'bibliography-reading',
+      text: book.referencesTitle || '📚 Bibliography & Reading',
+      isPart: true,
     });
   }
 } else {

@@ -35,6 +35,11 @@ export interface ChapterData {
   problemSet?: ProblemSetData; // Optional companion problem set
 }
 
+export interface ReferenceCategory {
+  category: string;
+  items: string[];
+}
+
 export interface BookData {
   id: string;
   volume: string;
@@ -45,4 +50,6 @@ export interface BookData {
   coverImage?: string; // Path to 3:4 letter sheet cover thumbnail
   colorScheme: 'blue' | 'amber' | 'emerald' | 'purple';
   chapters: ChapterData[];
+  referencesTitle?: string; // Custom title for references section (default: 'References and Further Reading')
+  references?: ReferenceCategory[];
 }

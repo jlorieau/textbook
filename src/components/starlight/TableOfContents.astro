@@ -23,10 +23,12 @@ export interface CustomTocItem {
 let items: CustomTocItem[] = [];
 
 if (book) {
-  const overviewText = book.overviewTitle || Astro.locals.t('tableOfContents.overview') || 'Overview';
-  items.push({ slug: '_top', text: overviewText });
-
   const hasAnyPart = book.chapters.some((ch) => Boolean(ch.part));
+
+  if (!hasAnyPart && book.overviewTitle !== false) {
+    const overviewText = book.overviewTitle || Astro.locals.t('tableOfContents.overview') || 'Overview';
+    items.push({ slug: '_top', text: overviewText });
+  }
 
   if (hasAnyPart) {
     let currentPart: string | null = null;
@@ -64,6 +66,14 @@ if (book) {
         slug: `ch-${idx + 1}`,
         text: `Chapter ${idx + 1}: ${ch.shortTitle || ch.title}`,
       });
+    });
+  }
+
+  if (book.references && book.references.length > 0) {
+    items.push({
+      slug: 'bibliography-reading',
+      text: book.referencesTitle || '📚 Bibliography & Reading',
+      isPart: true,
     });
   }
 } else {
@@ -153,7 +163,10 @@ if (book) {
           if (!isIntersecting) continue;
           const heading = getElementHeading(target);
           if (!heading) continue;
-          const link = links.find((l) => l.hash === '#' + encodeURIComponent(heading.id));
+          let link = links.find((l) => l.hash === '#' + encodeURIComponent(heading.id));
+          if (!link && heading.id === PAGE_TITLE_ID && links.length > 0) {
+            link = links[0];
+          }
           if (link) {
             this.current = link;
             break;
@@ -229,6 +242,9 @@ if (book) {
     margin-top: 0.65rem;
     padding-block: 0.25rem;
     letter-spacing: 0.01em;
+  }
+  ul.custom-toc-list > li:first-child a.toc-part-link {
+    margin-top: 0;
   }
   ul.custom-toc-list a.toc-part-link:hover {
     color: var(--sl-color-white);

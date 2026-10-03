@@ -3,6 +3,7 @@
 import type { BookData } from '../types/book';
 import ChapterRow from './ChapterRow.astro';
 import ChannelBanner from './ChannelBanner.astro';
+import BookReferences from './BookReferences.astro';
 
 interface Props {
   book: BookData;
@@ -95,6 +96,11 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
       );
     })}
   </div>
+
+  <!-- References & Further Reading Section -->
+  {book.references && book.references.length > 0 && (
+    <BookReferences book={book} />
+  )}
 
   <!-- Main YouTube Channel Spotlight -->
   <ChannelBanner />

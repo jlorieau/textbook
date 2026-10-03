@@ -1,0 +1,158 @@
+---
+// src/components/BookReferences.astro
+import type { BookData } from '../types/book';
+
+interface Props {
+  book: BookData;
+}
+
+const { book } = Astro.props;
+const references = book.references ?? [];
+const sectionTitle = book.referencesTitle ?? '📚 Bibliography & Reading';
+const sectionSlug = 'bibliography-reading';
+
+function formatCitation(text: string): string {
+  // Convert markdown *Book Title* into an italicized <em> tag
+  return text.replace(/\*([^*]+)\*/g, '<em class="book-title-italic">$1</em>');
+}
+---
+
+<section class="book-references-section not-content" id={sectionSlug}>
+  <div class="book-part-divider">
+    <h2 class="part-divider-title" id={sectionSlug}>{sectionTitle}</h2>
+  </div>
+
+  <div class="references-content-flow">
+    {references.map((cat) => {
+      const catSlug = 'ref-' + cat.category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      return (
+        <div class="reference-category-block">
+          <h3 class="category-title" id={catSlug}>{cat.category}</h3>
+
+          <ol class="citation-clean-list">
+            {cat.items.map((item, idx) => (
+              <li class="citation-clean-item">
+                <span class="citation-index">{idx + 1}.</span>
+                <span class="citation-text" set:html={formatCitation(item)} />
+              </li>
+            ))}
+          </ol>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .book-references-section {
+    width: 100%;
+    margin-bottom: 3rem;
+  }
+
+  /* Exactly matches .book-part-divider and .part-divider-title in BookStream.astro */
+  .book-part-divider {
+    margin: 4.5rem 0 1.5rem 0;
+    padding-top: 1.75rem;
+    border-top: 2px solid var(--sl-color-gray-5);
+    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+  }
+
+  .part-divider-title {
+    margin: 0 !important;
+    font-size: 1.65rem !important;
+    font-weight: 800 !important;
+    color: var(--sl-color-white) !important;
+    letter-spacing: -0.02em !important;
+    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+  }
+
+  .references-content-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-left: 0.15rem;
+  }
+
+  .category-title {
+    margin: 0.25rem 0 0.65rem 0 !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    color: var(--sl-color-white) !important;
+    letter-spacing: -0.01em;
+    scroll-margin-top: calc(var(--sl-nav-height) + 2rem);
+  }
+
+  /* Clean citation list without bounding boxes and compact spacing */
+  .citation-clean-list {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .citation-clean-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    padding: 0.15rem 0;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .citation-index {
+    font-family: var(--sl-font-mono);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--sl-color-gray-3);
+    min-width: 1.5rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  :global(.book-theme-amber) .citation-index {
+    color: #fbbf24;
+  }
+
+  .citation-text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--sl-color-gray-2);
+  }
+
+  :global(.citation-text .book-title-italic) {
+    font-style: italic;
+    font-weight: 600;
+    color: var(--sl-color-white);
+  }
+
+  /* Light theme styles */
+  :global(:root[data-theme='light']) .citation-text {
+    color: #334155;
+  }
+
+  :global(:root[data-theme='light']) :global(.book-theme-amber) .citation-index {
+    color: #b45309;
+  }
+
+  :global(:root[data-theme='light'] .citation-text .book-title-italic) {
+    color: #0f172a;
+  }
+
+  @media (max-width: 640px) {
+    .citation-clean-item {
+      gap: 0.45rem;
+    }
+
+    .citation-index {
+      min-width: 1.25rem;
+      font-size: 0.85rem;
+    }
+
+    .citation-text {
+      font-size: 0.9rem;
+    }
+  }
+</style>
