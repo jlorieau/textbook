@@ -40,6 +40,11 @@ export interface ReferenceCategory {
   items: string[];
 }
 
+export interface BookPart {
+  title?: string; // Optional part / section grouping title (e.g., '📐 Background')
+  chapters: ChapterData[];
+}
+
 export interface BookData {
   id: string;
   volume: string;
@@ -49,7 +54,35 @@ export interface BookData {
   description: string;
   coverImage?: string; // Path to 3:4 letter sheet cover thumbnail
   colorScheme: 'blue' | 'amber' | 'emerald' | 'purple';
-  chapters: ChapterData[];
-  referencesTitle?: string; // Custom title for references section (default: 'References and Further Reading')
+  parts?: BookPart[]; // Nested part groupings
+  chapters?: ChapterData[]; // Flattened or non-part chapter list
+  referencesTitle?: string; // Custom title for references section (default: '📚 Bibliography & Reading')
   references?: ReferenceCategory[];
+}
+
+/**
+ * Returns a flat array of all chapters in the book, ensuring each chapter has its inherited `part` title populated.
+ */
+export function getBookChapters(book: BookData): ChapterData[] {
+  if (book.parts && book.parts.length > 0) {
+    return book.parts.flatMap((p) =>
+      p.chapters.map((ch) => ({
+        ...ch,
+        part: ch.part ?? p.title,
+      }))
+    );
+  }
+  return book.chapters ?? [];
+}
+
+/**
+ * Helper to define a book with automatic `chapters` getter synthesized from `parts`.
+ */
+export function defineBook(data: BookData): BookData {
+  return {
+    ...data,
+    get chapters(): ChapterData[] {
+      return getBookChapters(data);
+    },
+  };
 }
