@@ -49,6 +49,8 @@ export interface BookData {
   id: string;
   volume: string;
   title: string;
+  seriesTitle?: string; // Series brand prefix (e.g. 'Curriculum in Motion')
+  subjectTitle?: string; // Subject name (e.g. 'Thermodynamics')
   overviewTitle?: string; // Custom title for TOC overview item (default: 'Overview')
   tagline: string;
   description: string;

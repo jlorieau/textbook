@@ -3,7 +3,9 @@ import { defineBook, type BookData } from '../../types/book';
 export const quantumMechanicsBook: BookData = defineBook({
   id: 'qm',
   volume: 'Volume II',
-  title: 'Book of Quantum Mechanics',
+  title: 'Curriculum in Motion: Quantum Mechanics',
+  seriesTitle: 'Curriculum in Motion',
+  subjectTitle: 'Quantum Mechanics',
   tagline: 'Mathematical foundations',
   description:
     'Wave-Particle Duality, Schrodinger Equation, Hydrogen Atom, Electronic Hamiltonian, Spectroscopy',

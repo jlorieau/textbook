@@ -201,6 +201,15 @@ html {
   padding-top: 0.5rem !important;
 }
 
+/* On book stream pages, hide Starlight's redundant text header so the Book Hero Banner serves as the primary header */
+:root:has(.book-stream-container) .content-panel:not(:has(.sl-markdown-content)) {
+  display: none !important;
+}
+
+:root:has(.book-stream-container) .sl-markdown-content {
+  padding-top: 0.5rem !important;
+}
+
 .main-screen-container {
   display: flex;
   flex-direction: column;

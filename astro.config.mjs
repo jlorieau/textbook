@@ -42,11 +42,11 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: '📙 Book of Thermodynamics',
+          label: '📙 Curriculum in Motion: Thermodynamics',
           slug: 'thermodynamics',
         },
         {
-          label: '📘 Book of Quantum Mechanics',
+          label: '📘 Curriculum in Motion: Quantum Mechanics',
           slug: 'quantum-mechanics',
         },
         {

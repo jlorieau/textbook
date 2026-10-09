@@ -43,7 +43,16 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
 
       <div class="book-hero-content">
         <div class="book-hero-meta">
-          <h1 class="book-main-title">{book.title}</h1>
+          <h1 class="book-main-title" id="_top">
+            {book.seriesTitle ? (
+              <>
+                <span class="series-title-kicker">{book.seriesTitle}</span>
+                <span class="subject-title-main">{book.subjectTitle ?? book.title}</span>
+              </>
+            ) : (
+              book.title
+            )}
+          </h1>
           <p class="book-desc-text">{book.description}</p>
         </div>
 
@@ -200,16 +209,44 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
   }
 
   .book-main-title {
-    margin: 0 0 0.5rem 0 !important;
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 0.65rem 0 !important;
     font-size: 2.25rem;
-    font-weight: 800;
     letter-spacing: -0.02em;
+    line-height: 1.15;
+    scroll-margin-top: calc(var(--sl-nav-height) + 1.5rem);
+  }
+
+  .book-main-title .series-title-kicker {
+    display: block;
+    font-size: 0.70em;
+    font-weight: 600;
+    color: var(--sl-color-gray-2);
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin-bottom: 0.2rem;
+  }
+
+  .book-main-title .subject-title-main {
+    display: block;
+    font-size: 1em;
+    font-weight: 800;
     color: var(--sl-color-white);
+    line-height: 1.15;
+  }
+
+  :root[data-theme='light'] .book-main-title .series-title-kicker {
+    color: var(--sl-color-gray-3);
+  }
+
+  :root[data-theme='light'] .book-main-title .subject-title-main {
+    color: var(--sl-color-black);
   }
 
   .book-desc-text {
-    font-size: 0.98rem;
-    color: var(--sl-color-gray-2);
+    font-size: 0.90rem;
+    color: hsl(214.57deg 22.82% 65.45%);
     line-height: 1.6;
     max-width: 850px;
     margin: 0 0 1.5rem 0 !important;

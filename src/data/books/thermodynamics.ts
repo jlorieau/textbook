@@ -3,7 +3,9 @@ import { defineBook, type BookData } from '../../types/book';
 export const thermodynamicsBook: BookData = defineBook({
   id: 'thermo',
   volume: 'Volume I',
-  title: 'Book of Thermodynamics',
+  title: 'Curriculum in Motion: Thermodynamics',
+  seriesTitle: 'Curriculum in Motion',
+  subjectTitle: 'Thermodynamics',
   tagline: 'Energy transformations, state functions, enthalpy, and entropy.',
   description:
     'Ideal Gas Law, Enthalpy, Internal Energy, Entropy, Gibbs Free Energy, Equilibria',

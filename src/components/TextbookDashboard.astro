@@ -41,8 +41,11 @@ const thermoPsCount = thermodynamicsBook.chapters.filter((c) => Boolean(c.proble
         )}
 
         <div class="card-info-col">
-          <h3>
-            <a href="/thermodynamics/" class="card-title-link">{thermodynamicsBook.title}</a>
+          <h3 class="card-title-heading">
+            <a href="/thermodynamics/" class="card-title-link">
+              <span class="series-title-kicker">{thermodynamicsBook.seriesTitle ?? 'Curriculum in Motion'}</span>
+              <span class="subject-title-main">{thermodynamicsBook.subjectTitle ?? 'Thermodynamics'}</span>
+            </a>
           </h3>
           <p class="card-description">{thermodynamicsBook.description}</p>
           
@@ -82,8 +85,11 @@ const thermoPsCount = thermodynamicsBook.chapters.filter((c) => Boolean(c.proble
         )}
 
         <div class="card-info-col">
-          <h3>
-            <a href="/quantum-mechanics/" class="card-title-link">{quantumMechanicsBook.title}</a>
+          <h3 class="card-title-heading">
+            <a href="/quantum-mechanics/" class="card-title-link">
+              <span class="series-title-kicker">{quantumMechanicsBook.seriesTitle ?? 'Curriculum in Motion'}</span>
+              <span class="subject-title-main">{quantumMechanicsBook.subjectTitle ?? 'Quantum Mechanics'}</span>
+            </a>
           </h3>
           <p class="card-description">{quantumMechanicsBook.description}</p>
           
@@ -219,21 +225,46 @@ const thermoPsCount = thermodynamicsBook.chapters.filter((c) => Boolean(c.proble
     border: 1px solid var(--qp-badge-amber-border);
   }
   .textbook-card h3 {
-    margin: 0 0 0.35rem 0 !important;
+    margin: 0 0 0.45rem 0 !important;
     font-size: 1.25rem;
     font-weight: 700;
+    line-height: 1.25;
   }
   .card-title-link {
+    display: flex;
+    flex-direction: column;
     color: inherit;
     text-decoration: none;
     transition: color 0.15s ease;
   }
-  .card-title-link:hover {
+  .card-title-link .series-title-kicker {
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--sl-color-gray-2);
+    letter-spacing: -0.01em;
+  }
+  .card-title-link .subject-title-main {
+    display: block;
+    font-size: 1em;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--sl-color-white);
+  }
+  :root[data-theme='light'] .card-title-link .series-title-kicker {
+    color: var(--sl-color-gray-3);
+  }
+  :root[data-theme='light'] .card-title-link .subject-title-main {
+    color: var(--sl-color-black);
+  }
+  .card-title-link:hover .series-title-kicker,
+  .card-title-link:hover .subject-title-main {
     color: var(--sl-color-accent);
   }
   .card-description {
-    font-size: 0.88rem;
-    color: var(--sl-color-gray-2);
+    font-size: 0.85em;
+    color: hsl(214.57deg 22.82% 65.45%);
     margin: 0 0 0.75rem 0 !important;
     line-height: 1.45;
     flex-grow: 1;
