@@ -2,6 +2,7 @@
 // src/components/BookStream.astro
 import type { BookData } from '../types/book';
 import ChapterRow from './ChapterRow.astro';
+import CurriculumMap from './CurriculumMap.astro';
 import ChannelBanner from './ChannelBanner.astro';
 import BookReferences from './BookReferences.astro';
 
@@ -25,85 +26,175 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
 ---
 
 <div class={`book-stream-container not-content book-theme-${book.colorScheme}`} data-book-id={book.id}>
-  <!-- Book Hero Banner -->
-  <header class="book-hero-banner not-content">
-    <div class="book-hero-layout">
-      {book.coverImage && (
-        <div class="book-hero-cover-wrap">
-          <img
-            src={book.coverImage}
-            alt={`${book.title} Cover`}
-            class="book-hero-cover-img"
-            loading="eager"
-            width="170"
-            height="227"
-          />
-        </div>
-      )}
-
-      <div class="book-hero-content">
-        <div class="book-hero-meta">
-          <h1 class="book-main-title" id="_top">
-            {book.seriesTitle ? (
-              <>
-                <span class="series-title-kicker">{book.seriesTitle}</span>
-                <span class="subject-title-main">{book.subjectTitle ?? book.title}</span>
-              </>
-            ) : (
-              book.title
-            )}
-          </h1>
-          <p class="book-desc-text">{book.description}</p>
-        </div>
-
-        <div class="book-stats-grid">
-          <div class="stat-pill">
-            <span class="stat-val">{totalLectures}</span>
-            <span class="stat-lbl">Lectures</span>
-          </div>
-          <div class="stat-pill">
-            <span class="stat-val">{totalProblemSets}</span>
-            <span class="stat-lbl">Problem Sets</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Interactive Overall Book Progress Bar -->
-  <div class="book-overall-progress" id={`progress-panel-${book.id}`}>
-    <div class="progress-info-row">
-      <span class="progress-title-lbl">Overall Volume Mastery</span>
-      <span class="progress-percent-lbl" id={`progress-text-${book.id}`}>0%</span>
-    </div>
-    <div class="progress-bar-track">
-      <div class="progress-bar-fill" id={`progress-bar-${book.id}`}></div>
-    </div>
-    <div class="progress-counter-sub" id={`progress-count-${book.id}`}>
-      0 of {allTrackingSlugs.length} modules completed
+  <!-- View Switcher Controls (Placed at top before title cards) -->
+  <div class="book-view-switcher not-content">
+    <div class="view-switcher-pill-group" role="tablist" aria-label="Book View Format">
+      <button
+        type="button"
+        id={`btn-view-stream-${book.id}`}
+        class="view-pill-btn active"
+        role="tab"
+        aria-selected="true"
+        aria-controls={`view-stream-panel-${book.id}`}
+        title="Display full lecture stream with problem sets and notes"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+        </svg>
+        <span>Stream View</span>
+      </button>
+      <button
+        type="button"
+        id={`btn-view-map-${book.id}`}
+        class="view-pill-btn"
+        role="tab"
+        aria-selected="false"
+        aria-controls={`view-map-panel-${book.id}`}
+        title="Display visual curriculum map flowchart"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2a3 3 0 0 0-3 3v2a3 3 0 0 0 2 2.82V12H7a3 3 0 0 0-3 3v2a3 3 0 0 0 6 0v-2a3 3 0 0 0-2-2.82V11h8v1.18A3 3 0 0 0 14 15v2a3 3 0 0 0 6 0v-2a3 3 0 0 0-3-3h-4V9.82A3 3 0 0 0 15 7V5a3 3 0 0 0-3-3zm-1 3a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0V5zm-5 12a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0v-2zm10 0a1 1 0 1 1 2 0v2a1 1 0 1 1-2 0v-2z"/>
+        </svg>
+        <span>Curriculum Map</span>
+      </button>
     </div>
   </div>
 
-  <!-- Sequential Video Chapters -->
-  <div class="sequential-chapters-list">
-    {book.chapters.map((chapter, idx) => {
-      const showPartHeading = chapter.part && (idx === 0 || book.chapters[idx - 1].part !== chapter.part);
-      const partSlug = chapter.part ? 'part-' + chapter.part.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : null;
-      return (
-        <Fragment key={chapter.id}>
-          {showPartHeading && (
-            <div class="book-part-divider">
-              <h2 class="part-divider-title" id={partSlug}>{chapter.part}</h2>
+  <!-- View 1: Default Sequential Stream View -->
+  <div id={`view-stream-panel-${book.id}`} class="view-panel active-panel">
+    <!-- Full Book Hero Banner -->
+    <header class="book-hero-banner not-content">
+      <div class="book-hero-layout">
+        {book.coverImage && (
+          <div class="book-hero-cover-wrap">
+            <img
+              src={book.coverImage}
+              alt={`${book.title} Cover`}
+              class="book-hero-cover-img"
+              loading="eager"
+              width="170"
+              height="227"
+            />
+          </div>
+        )}
+
+        <div class="book-hero-content">
+          <div class="book-hero-meta">
+            <h1 class="book-main-title" id="_top">
+              {book.seriesTitle ? (
+                <>
+                  <span class="series-title-kicker">{book.seriesTitle}</span>
+                  <span class="subject-title-main">{book.subjectTitle ?? book.title}</span>
+                </>
+              ) : (
+                book.title
+              )}
+            </h1>
+            <p class="book-desc-text">{book.description}</p>
+          </div>
+
+          <div class="book-stats-grid">
+            <div class="stat-pill">
+              <span class="stat-val">{totalLectures}</span>
+              <span class="stat-lbl">Lectures</span>
             </div>
-          )}
-          <ChapterRow
-            chapter={chapter}
-            chapterNumber={idx + 1}
-            bookId={book.id}
-          />
-        </Fragment>
-      );
-    })}
+            <div class="stat-pill">
+              <span class="stat-val">{totalProblemSets}</span>
+              <span class="stat-lbl">Problem Sets</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Interactive Overall Book Progress Bar -->
+    <div class="book-overall-progress" id={`progress-panel-${book.id}`}>
+      <div class="progress-info-row">
+        <span class="progress-title-lbl">Overall Volume Mastery</span>
+        <span class="progress-percent-lbl" id={`progress-text-${book.id}`}>0%</span>
+      </div>
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id={`progress-bar-${book.id}`}></div>
+      </div>
+      <div class="progress-counter-sub" id={`progress-count-${book.id}`}>
+        0 of {allTrackingSlugs.length} modules completed
+      </div>
+    </div>
+
+    <!-- Sequential Chapters List -->
+    <div class="sequential-chapters-list">
+      {book.chapters.map((chapter, idx) => {
+        const showPartHeading = chapter.part && (idx === 0 || book.chapters[idx - 1].part !== chapter.part);
+        const partSlug = chapter.part ? 'part-' + chapter.part.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : null;
+        return (
+          <Fragment key={chapter.id}>
+            {showPartHeading && (
+              <div class="book-part-divider">
+                <h2 class="part-divider-title" id={partSlug}>{chapter.part}</h2>
+              </div>
+            )}
+            <ChapterRow
+              chapter={chapter}
+              chapterNumber={idx + 1}
+              bookId={book.id}
+            />
+          </Fragment>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- View 2: Alternative Interactive Curriculum Map View -->
+  <div id={`view-map-panel-${book.id}`} class="view-panel" style="display: none;">
+    <!-- Combined Compact Header Card: Small Title + Integrated Volume Mastery -->
+    <div class="compact-map-header-card not-content">
+      <div class="compact-header-main">
+        {book.coverImage && (
+          <div class="compact-cover-wrap">
+            <img
+              src={book.coverImage}
+              alt={`${book.title} Cover`}
+              class="compact-cover-img"
+              loading="eager"
+              width="50"
+              height="67"
+            />
+          </div>
+        )}
+
+        <div class="compact-title-col">
+          <div class="compact-title-group">
+            <span class="compact-series-kicker">{book.seriesTitle ?? 'Curriculum in Motion'}</span>
+            <h2 class="compact-subject-title">{book.subjectTitle ?? book.title}</h2>
+          </div>
+
+          <div class="compact-stats-row">
+            <span class="compact-stat-pill">
+              <strong>{totalLectures}</strong> Lectures
+            </span>
+            <span class="compact-stat-pill">
+              <strong>{totalProblemSets}</strong> Problem Sets
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compact-mastery-col">
+        <div class="compact-mastery-header">
+          <span class="compact-mastery-lbl">Volume Mastery</span>
+          <span class="compact-mastery-pct" id={`progress-text-map-${book.id}`}>0%</span>
+        </div>
+        <div class="progress-bar-track compact-track">
+          <div class="progress-bar-fill" id={`progress-bar-map-${book.id}`}></div>
+        </div>
+        <div class="compact-mastery-sub" id={`progress-count-map-${book.id}`}>
+          0 of {allTrackingSlugs.length} modules completed
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Curriculum Map Flowchart -->
+    <CurriculumMap book={book} />
   </div>
 
   <!-- References & Further Reading Section -->
@@ -119,6 +210,108 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
   .book-stream-container {
     width: 100%;
     margin-top: 1rem;
+  }
+
+  /* View Switcher */
+  .book-view-switcher {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0 0 1.25rem 0;
+  }
+
+  @media (max-width: 640px) {
+    .book-view-switcher {
+      justify-content: stretch;
+    }
+    .view-switcher-pill-group {
+      width: 100%;
+      display: flex;
+    }
+    .view-pill-btn {
+      flex: 1;
+      justify-content: center;
+    }
+  }
+
+  .view-switcher-pill-group {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 9999px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .view-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1.15rem;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--sl-color-gray-3);
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    user-select: none;
+  }
+
+  .view-pill-btn:hover {
+    color: var(--sl-color-white);
+  }
+
+  .view-pill-btn.active {
+    background: var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+
+  .book-theme-amber .view-pill-btn.active {
+    background: rgba(217, 119, 6, 0.25);
+    color: #fbbf24;
+    border-color: rgba(217, 119, 6, 0.4);
+  }
+
+  .book-theme-blue .view-pill-btn.active {
+    background: rgba(2, 132, 199, 0.25);
+    color: #38bdf8;
+    border-color: rgba(2, 132, 199, 0.4);
+  }
+
+  :root[data-theme='light'] .view-switcher-pill-group {
+    background: #f1f5f9;
+    border-color: var(--sl-color-gray-5);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  :root[data-theme='light'] .view-pill-btn {
+    color: var(--sl-color-gray-3);
+  }
+
+  :root[data-theme='light'] .view-pill-btn:hover {
+    color: var(--sl-color-black);
+  }
+
+  :root[data-theme='light'] .book-theme-amber .view-pill-btn.active {
+    background: #ffffff;
+    color: #b45309;
+    border-color: rgba(217, 119, 6, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  :root[data-theme='light'] .book-theme-blue .view-pill-btn.active {
+    background: #ffffff;
+    color: #0284c7;
+    border-color: rgba(2, 132, 199, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .view-panel {
+    width: 100%;
   }
 
   /* Section / Part Dividers */
@@ -335,6 +528,177 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     color: var(--sl-color-gray-3);
     margin-top: 0.4rem;
   }
+
+  /* Compact Map Header Card (Curriculum Map View) */
+  .compact-map-header-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.75rem;
+    padding: 0.85rem 1.25rem;
+    border-radius: 14px;
+    background: var(--sl-color-gray-6);
+    border: 1px solid var(--sl-color-gray-5);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1.25rem;
+  }
+
+  .compact-header-main {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .compact-cover-wrap {
+    width: 48px;
+    aspect-ratio: 3 / 4;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+  }
+
+  .compact-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .compact-title-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+  }
+
+  .compact-title-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .compact-series-kicker {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--sl-color-gray-3);
+    line-height: 1.2;
+  }
+
+  .compact-subject-title {
+    margin: 0 !important;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--sl-color-white);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .compact-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-top: 0.1rem;
+  }
+
+  .compact-stat-pill {
+    font-size: 0.74rem;
+    color: var(--sl-color-gray-3);
+    padding: 0.12rem 0.5rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--sl-color-gray-5);
+    white-space: nowrap;
+  }
+
+  .compact-stat-pill strong {
+    color: var(--sl-color-white);
+    font-weight: 700;
+  }
+
+  .compact-mastery-col {
+    flex: 0 0 280px;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .compact-mastery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .compact-mastery-lbl {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--sl-color-gray-2);
+  }
+
+  .compact-mastery-pct {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #10b981;
+    font-family: var(--sl-font-mono);
+  }
+
+  .compact-track {
+    height: 7px;
+  }
+
+  .compact-mastery-sub {
+    font-size: 0.72rem;
+    color: var(--sl-color-gray-3);
+  }
+
+  @media (max-width: 768px) {
+    .compact-map-header-card {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .compact-mastery-col {
+      flex: 1 1 auto;
+      max-width: 100%;
+    }
+  }
+
+  :root[data-theme='light'] .compact-map-header-card {
+    background: #ffffff;
+    border-color: var(--sl-color-gray-5);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+
+  :root[data-theme='light'] .compact-subject-title {
+    color: var(--sl-color-black);
+  }
+
+  :root[data-theme='light'] .compact-series-kicker {
+    color: var(--sl-color-gray-3);
+  }
+
+  :root[data-theme='light'] .compact-stat-pill {
+    background: #f8fafc;
+    border-color: var(--sl-color-gray-5);
+  }
+
+  :root[data-theme='light'] .compact-stat-pill strong {
+    color: var(--sl-color-black);
+  }
+
+  :root[data-theme='light'] .compact-cover-wrap {
+    border-color: var(--sl-color-gray-5);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 </style>
 
 <script define:vars={{ bookId: book.id, slugs: allTrackingSlugs }}>
@@ -350,6 +714,8 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     });
 
     const percent = Math.round((completed / total) * 100);
+
+    // Stream View Progress Elements
     const bar = document.getElementById(`progress-bar-${bookId}`);
     const text = document.getElementById(`progress-text-${bookId}`);
     const count = document.getElementById(`progress-count-${bookId}`);
@@ -357,9 +723,97 @@ const totalProblemSets = book.chapters.filter((ch) => Boolean(ch.problemSet)).le
     if (bar) bar.style.width = `${percent}%`;
     if (text) text.textContent = `${percent}%`;
     if (count) count.textContent = `${completed} of ${total} modules completed`;
+
+    // Map View Progress Elements
+    const mapBar = document.getElementById(`progress-bar-map-${bookId}`);
+    const mapText = document.getElementById(`progress-text-map-${bookId}`);
+    const mapCount = document.getElementById(`progress-count-map-${bookId}`);
+
+    if (mapBar) mapBar.style.width = `${percent}%`;
+    if (mapText) mapText.textContent = `${percent}%`;
+    if (mapCount) mapCount.textContent = `${completed} of ${total} modules completed`;
   }
 
   updateBookOverallProgress();
   window.addEventListener('qp:progress-update', updateBookOverallProgress);
   document.addEventListener('astro:page-load', updateBookOverallProgress);
+
+  function initViewSwitcher() {
+    const streamBtn = document.getElementById(`btn-view-stream-${bookId}`);
+    const mapBtn = document.getElementById(`btn-view-map-${bookId}`);
+    const streamPanel = document.getElementById(`view-stream-panel-${bookId}`);
+    const mapPanel = document.getElementById(`view-map-panel-${bookId}`);
+
+    if (!streamBtn || !mapBtn || !streamPanel || !mapPanel) return;
+
+    function applyView(mode, persist = true) {
+      if (mode === 'map') {
+        streamPanel.style.display = 'none';
+        mapPanel.style.display = 'block';
+        streamBtn.classList.remove('active');
+        streamBtn.setAttribute('aria-selected', 'false');
+        mapBtn.classList.add('active');
+        mapBtn.setAttribute('aria-selected', 'true');
+        if (persist) localStorage.setItem('qp_textbook_view', 'map');
+      } else {
+        mapPanel.style.display = 'none';
+        streamPanel.style.display = 'block';
+        mapBtn.classList.remove('active');
+        mapBtn.setAttribute('aria-selected', 'false');
+        streamBtn.classList.add('active');
+        streamBtn.setAttribute('aria-selected', 'true');
+        if (persist) localStorage.setItem('qp_textbook_view', 'stream');
+      }
+    }
+
+    // Check URL query param, hash, or localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+    const hash = window.location.hash;
+    const saved = localStorage.getItem('qp_textbook_view');
+
+    if (viewParam === 'map' || hash === '#map' || (saved === 'map' && hash !== '#stream' && viewParam !== 'stream')) {
+      applyView('map', false);
+    } else {
+      applyView('stream', false);
+    }
+
+    streamBtn.addEventListener('click', () => {
+      applyView('stream', true);
+      if (window.location.hash === '#map') {
+        history.replaceState(null, '', window.location.pathname + window.location.search.replace(/[?&]view=map/, ''));
+      }
+    });
+
+    mapBtn.addEventListener('click', () => {
+      applyView('map', true);
+      history.replaceState(null, '', '#map');
+    });
+
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#map') {
+        applyView('map', false);
+      } else if (window.location.hash === '#stream') {
+        applyView('stream', false);
+      }
+    });
+
+    // Handle TOC chapter links when map view is active
+    document.querySelectorAll('a[href^="#ch-"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        if (mapPanel.style.display !== 'none') {
+          const chNum = link.getAttribute('href').replace('#ch-', '');
+          const mapTarget = document.getElementById(`map-ch-${chNum}`);
+          if (mapTarget) {
+            e.preventDefault();
+            mapTarget.scrollIntoView({ behavior: 'smooth' });
+            history.pushState(null, '', `#ch-${chNum}`);
+          }
+        }
+      });
+    });
+  }
+
+  initViewSwitcher();
+  document.addEventListener('astro:page-load', initViewSwitcher);
 </script>
