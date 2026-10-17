@@ -20,7 +20,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           title: "What Most Don't Get About Functions",
           shortTitle: 'Functions & Validity Domains',
           duration: '11:42',
-          youtubeId: 'KCFKsyrFnnw',
+          youtubeId: 'cXXh_VzG5tc',
           summary:
             'Functions are the hidden infrastructure of the physical universe, yet most math classes treat them as rigid black boxes where numbers go in and numbers come out.',
           timestamps: [
@@ -37,7 +37,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           ],
           problemSet: {
             title: 'Master Functions: 5 Practice Problems',
-            youtubeId: 'pgZk5ncHdpo',
+            youtubeId: '8fiMpgg9Z9A',
             duration: '14:20',
             summary:
               'Mastering functions requires more than memorizing f(x) notation—you need to understand domain boundaries, coordinate system transformations, physical assumptions, and exponential growth models.',
@@ -55,7 +55,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           title: "Why You Can't Master Science Without Calculus",
           shortTitle: 'Calculus Foundations',
           duration: '26:15',
-          youtubeId: '-UWaZOkkPZ4',
+          youtubeId: '9Mi8utb0wXs',
           summary:
             'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
           timestamps: [
@@ -78,7 +78,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           title: 'Partial Derivatives and How Nature is Built on Them',
           shortTitle: 'Multivariate Derivatives',
           duration: '28:15',
-          youtubeId: 'mCXxHQDrFnA',
+          youtubeId: '5lJsT6clZ_w',
           summary:
             "Introductory calculus courses stop at single-variable slopes and tangent lines, but nature doesn't operate in one dimension.",
           timestamps: [
@@ -100,7 +100,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           title: 'Why Cartesian Makes Math Harder Than It Needs to Be',
           shortTitle: 'Curvilinear Coordinate Systems',
           duration: '20:45',
-          youtubeId: 'szI2Ioh9w20',
+          youtubeId: '1aevpFm6pEU',
           summary:
             'Doing math and calculus in Cartesian coordinates is like navigating an entire road trip solely from a satellite view—convenient on a flat map, but completely unnatural when the terrain curves.',
           timestamps: [
@@ -120,7 +120,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           title: "Why You Can't Master Physics Without Complex Numbers",
           shortTitle: 'Complex Numbers & Phase',
           duration: '09:15',
-          youtubeId: 'jvFLJieOgLg',
+          youtubeId: 'r59WxHkS2J8',
           summary:
             'We learn early on that i² = -1, but calling complex numbers "imaginary" is an accident of history that obscures their geometric reality.',
           timestamps: [
@@ -139,7 +139,7 @@ export const quantumMechanicsBook: BookData = defineBook({
           ],
           problemSet: {
             title: 'Master Complex Numbers: 4 Essential Practice Problems',
-            youtubeId: 'C25KaknxsAQ',
+            youtubeId: 'ZJGPlXUWdjE',
             duration: '06:37',
             summary:
               'Mastering complex numbers requires more than memorizing formulas—you need to understand their geometry, phase, and the time evolution of frequencies.',

@@ -20,7 +20,7 @@ export const thermodynamicsBook: BookData = defineBook({
           title: "Why You Can't Master Science Without Calculus",
           shortTitle: 'Calculus Foundations',
           duration: '26:15',
-          youtubeId: '-UWaZOkkPZ4',
+          youtubeId: '9Mi8utb0wXs',
           summary:
             'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
           timestamps: [
@@ -43,7 +43,7 @@ export const thermodynamicsBook: BookData = defineBook({
           title: 'Partial Derivatives and How Nature is Built on Them',
           shortTitle: 'Multivariate Derivatives',
           duration: '28:15',
-          youtubeId: 'mCXxHQDrFnA',
+          youtubeId: '5lJsT6clZ_w',
           summary:
             "Introductory calculus courses stop at single-variable slopes and tangent lines, but nature doesn't operate in one dimension.",
           timestamps: [
@@ -70,7 +70,7 @@ export const thermodynamicsBook: BookData = defineBook({
           title: 'Why Thermodynamics Needs Both State and Path Functions',
           shortTitle: 'Path vs. State Variables',
           duration: '13:15',
-          youtubeId: 'pbb-6FsBTZE',
+          youtubeId: 'ANUFCNhmNDE',
           summary:
             'Standard textbooks introduce state and path functions with abstract equations, leaving students wondering why physics needs both.',
           timestamps: [
@@ -95,7 +95,7 @@ export const thermodynamicsBook: BookData = defineBook({
           title: 'Why Thermodynamics Needs Both Internal Energy and Enthalpy',
           shortTitle: 'Internal Energy & Enthalpy',
           duration: '18:50',
-          youtubeId: '-AJLtPOtxbQ',
+          youtubeId: '6ka-H1xyLUA',
           summary:
             'Why does thermodynamics need two different definitions of energy when heating a gas requires more heat than its internal energy increase?',
           timestamps: [
