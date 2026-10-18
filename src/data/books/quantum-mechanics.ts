@@ -54,8 +54,8 @@ export const quantumMechanicsBook: BookData = defineBook({
           id: 'calculus',
           title: "Why You Can't Master Science Without Calculus",
           shortTitle: 'Calculus Foundations',
-          duration: '26:15',
-          youtubeId: '9Mi8utb0wXs',
+          duration: '24:24',
+          youtubeId: '_yT3U_3M_DY',
           summary:
             'Learning science and engineering without calculus is like going to culinary school to become a chef, but leaving with the skills of a cook who can only follow recipes.',
           timestamps: [
@@ -77,8 +77,8 @@ export const quantumMechanicsBook: BookData = defineBook({
           id: 'multivariate-derivatives',
           title: 'Partial Derivatives and How Nature is Built on Them',
           shortTitle: 'Multivariate Derivatives',
-          duration: '28:15',
-          youtubeId: '5lJsT6clZ_w',
+          duration: '27:25',
+          youtubeId: 'T_exLbnfLOo',
           summary:
             "Introductory calculus courses stop at single-variable slopes and tangent lines, but nature doesn't operate in one dimension.",
           timestamps: [
@@ -119,8 +119,8 @@ export const quantumMechanicsBook: BookData = defineBook({
           id: 'complex-numbers',
           title: "Why You Can't Master Physics Without Complex Numbers",
           shortTitle: 'Complex Numbers & Phase',
-          duration: '09:15',
-          youtubeId: 'r59WxHkS2J8',
+          duration: '09:05',
+          youtubeId: 'I3fphton8Rw',
           summary:
             'We learn early on that i² = -1, but calling complex numbers "imaginary" is an accident of history that obscures their geometric reality.',
           timestamps: [
