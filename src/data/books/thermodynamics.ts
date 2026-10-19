@@ -69,8 +69,8 @@ export const thermodynamicsBook: BookData = defineBook({
           id: 'path-and-state',
           title: 'Why Thermodynamics Needs Both State and Path Functions',
           shortTitle: 'Path vs. State Variables',
-          duration: '13:15',
-          youtubeId: 'ANUFCNhmNDE',
+          duration: '13:21',
+          youtubeId: '1uXtZ0x-SCE',
           summary:
             'Standard textbooks introduce state and path functions with abstract equations, leaving students wondering why physics needs both.',
           timestamps: [
